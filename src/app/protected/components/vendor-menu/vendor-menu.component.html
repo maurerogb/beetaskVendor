@@ -1,0 +1,236 @@
+<p-tabs value="0">
+    <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-row gap-3 items-center ">
+            @let vendor =vendorInfo()!;
+            <img [src]="vendor?.businessLogo" class="w-20 h-20 rounded-full object-cover" alt="">
+            <span class="flex flex-col gap-1">
+                <span class="text-2xl font-bold text-p-color">
+                    {{vendor?.businessName}}
+                </span>
+                <span class="text-xl font-medium text-p-color">
+                    {{vendor?.businessAddress}}
+                </span>
+            </span>
+        </div>
+        <div class="  mb-4">
+
+            <app-cancel (click)="closeTab()"></app-cancel>
+        </div>
+    </div>
+
+    <p-tablist>
+        <p-tab value="0">Single Menu</p-tab>
+        <p-tab value="1">Bulk Upload</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+            @if (!mainVision()) {
+            <div class="gird grid-cols-12 lg:col-span-10">
+                @for (item of otherProducts(); track $index) {
+                <div class="text-xl text-p-color font-bold">{{item.menuType}}</div>
+                <p-divider />
+                @for (itm of item.products; track itm.id) {
+                <div class="flex flex-row mt-3 justify-between">
+                    <div>
+
+                        <div class="flex flex-row items-center">
+
+                            <img [src]="itm.imgUrl" width="50" height="25" alt="product.productName" />
+                            <div class="flex flex-col p-3">
+
+                                <span class=" font-semibold text-p-color ml-2"> {{ itm.productName}}</span>
+                                <span class=" font-normal ml-2"> {{itm.description}}</span>
+                            </div>
+                        </div>
+                        <span class="ml-2 text-lg font-semibold text-p-color "> {{ itm.price |
+                            nairaCurrency}}</span>
+
+                    </div>
+                    <div class="flex flex-col items-center gap-2 justify-end">
+                        @if (itm.selected) {
+
+                        <p-tag class="mb-4 cursor-pointer" (click)="removeAssociat(itm)" severity="danger"
+                            icon="pi pi-times" />
+                        }
+                        @if (!itm.selected) {
+
+                        <p-checkbox [binary]="true" (onChange)="selectedRow(itm, $event)" />
+                        }
+
+
+                        <!-- <button class="bg-p pl-2 pr-2 pt-1 pb-1 rounded mt-2 font-semibold"
+                                    (click)="addAssProduct(itm)"> Add </button>
+
+                                <button (click)="removeAssProduct(itm)" class="bg-p pl-2 pr-2 pt-1 pb-1 font-semibold rounded mt-2" type="button">
+                                    Remove </button> -->
+
+                    </div>
+                </div>
+                }
+                }
+
+
+            </div>
+
+            <div class="w-full ">
+                <button [disabled]="addAssProduct.length == 0" (click)="saveAssProduct()"
+                    class="w-full font-bold bg-p p-3 rounded-md" type="button">Save</button>
+            </div>
+
+            }
+            @if (mainVision()) {
+            <div class="grid grid-cols-12 gap-4">
+
+                <div class="col-span-12 lg:col-span-10" [formGroup]="menuForm!">
+                    <div class="grid grid-cols-12  mb-3   gap-x-4">
+                        <div class="col-span-6 mr-4">
+                            <label class="font-medium text-surface-900 dark:text-surface-0 mb-2 block"
+                                for="">Category</label>
+                            <p-select formControlName="categoryId" [options]="categories()" optionValue="id"
+                                optionLabel="categoryName" placeholder="Select a Caregory" class="w-full  md:w-56" />
+                        </div>
+                        <div class="col-span-6 mr-4">
+                            <label class="font-medium text-surface-900 dark:text-surface-0 mb-2 block"
+                                for="">Type</label>
+                            <p-select formControlName="typeId" [options]="menuType()" optionLabel="typeName"
+                                optionValue="id" placeholder="Select a Menu Type" class="w-full md:w-56" />
+                        </div>
+                    </div>
+                    <div class="col-span-12 ">
+                        <label for="itemName" class="font-medium text-surface-900 dark:text-surface-0 mb-2 block">
+                            Item Name
+                        </label>
+                        <input id="itemName" formControlName="itemName" type="text" pSize="small" pInputText fluid />
+                    </div>
+
+                    <div class="flex flex-col  ">
+
+                        <div class="col-span-3">
+                            <span>Display Image</span>
+                            <app-file-upload (fileChange)="upLoadPicture($event)"></app-file-upload>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col mt-6 mb-3  ">
+                        <label for="shortDescription"
+                            class="font-medium text-surface-900 dark:text-surface-0 mb-2 block"> Short Description
+                        </label>
+                        <textarea formControlName="shortDescription" rows="2" cols="3" pTextarea></textarea>
+                        <!-- <input id="shortDescription" pSize="small" type="text" pInputText fluid /> -->
+                    </div>
+
+                    <div class="col-span-12 ">
+                        <label for="price" class="font-medium text-surface-900 dark:text-surface-0 mb-2 block">
+                            Price
+                        </label>
+                        <input formControlName="price" id="price" pSize="small" type="text" pInputText fluid />
+                    </div>
+                    <div class="col-span-12 mt-4">
+                        <span id="switch2" class="mr-3">Available</span>
+                        <p-toggleswitch formControlName="isActive" ariaLabelledBy="switch2" />
+                    </div>
+                    <div class="flex flex-col justify-center items-center  mt-6 mr-12 ">
+                        <!-- <p-button class="w-full">Save Menu</p-button> -->
+                        <button pButton (click)="saveProduct()"
+                            class="button rounded-input p-2 bg-p w-full font-bold ">Save Menu</button>
+                    </div>
+
+                </div>
+            </div>
+            }
+
+
+
+
+        </p-tabpanel>
+        <p-tabpanel value="1">
+            <div class="m-0">
+                <div class=" messageblock flex flex-row gap-x-4 ">
+                    <div class="justify-start">
+                        <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M15.4992 23.6375C14.4297 23.6375 13.5617 22.7695 13.5617 21.7C13.5617 20.6305 14.4297 19.7625 15.4992 19.7625C16.5687 19.7625 17.4367 20.6305 17.4367 21.7C17.4367 22.7695 16.5687 23.6375 15.4992 23.6375ZM13.95 6.20019H17.05V17.0502H13.95V6.20019ZM15.5 0C6.9533 0 0 6.9533 0 15.5C0 24.0482 6.9533 31 15.5 31C24.0467 31 31 24.0482 31 15.5C31 6.9533 24.0467 0 15.5 0Z"
+                                fill="#6D7E95" />
+                        </svg>
+                    </div>
+                    <div class=" gap-y-10 w-full">
+                        <div class=" font-bold">
+                            Download template to know how the uploading file should be structured
+                        </div>
+                        <div class="">
+                            Ensure all file headers are maintained and filled with the correct input/users data
+                        </div>
+
+                        <div class=" downloanText mt-6 ">
+                            <i class="pi pi-download mr-3"></i>
+                            Download Sample Template
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex flex-col mt-8 ">
+
+                    <label for="license-upload"
+                        class=" w-full items-center cursor-pointer border-2 border-dashed border-gray-400 rounded-lg p-4 text-center space-y-2 hover:bg-rose-50">
+
+                        <div class=" flex items-center  justify-center mb-6">
+                            <svg width="37" height="36" viewBox="0 0 37 36" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M31.9521 11.4498C31.82 5.10496 26.6024 0.00195312 20.1846 0.00195312C15.2303 0.00195312 10.9915 3.04313 9.25479 7.3487C8.97831 7.32033 8.69786 7.30552 8.41386 7.30552C3.94308 7.30552 0.318848 10.9062 0.318848 15.348C0.318848 19.7897 3.94308 23.3905 8.41386 23.3905H20.1846H30.5942C33.9556 23.3905 36.6805 20.6832 36.6805 17.3437C36.6805 14.468 34.6595 12.0631 31.9521 11.4498Z"
+                                    fill="#FF6F00" />
+                                <path
+                                    d="M27.0424 2.19039C26.0681 1.93025 25.0435 1.7916 23.9869 1.7916C19.0333 1.7916 14.7943 4.83285 13.0573 9.13855C12.7807 9.11012 12.5005 9.09537 12.2169 9.09537C7.74585 9.09537 4.12205 12.6968 4.12205 17.1377C4.12205 19.5893 5.22554 21.7842 6.96706 23.26C3.18673 22.583 0.318848 19.2974 0.318848 15.3461C0.318848 10.9041 3.94372 7.30384 8.41364 7.30384C8.69836 7.30384 8.97853 7.31859 9.25529 7.34703C10.9911 3.04132 15.2301 0 20.1849 0C22.744 0 25.1122 0.811201 27.0424 2.19039Z"
+                                    fill="#DDEAFB" />
+                                <path
+                                    d="M34.3737 21.116V34.0618C34.3737 35.1326 33.5004 36.0001 32.4231 36.0001H16.3963C15.4756 36.0001 14.7041 35.3663 14.4991 34.5138L14.4913 33.4057L14.4458 26.8062V13.7821C14.4458 12.7113 15.319 11.8438 16.3963 11.8438H25.0408C25.8177 11.8438 28.3337 13.975 30.5578 16.2196C32.5871 18.2683 34.3737 20.4113 34.3737 21.116Z"
+                                    fill="#DDEAFB" />
+                                <path
+                                    d="M34.3733 21.1151V25.8574C34.3733 25.8521 34.3728 25.8467 34.3728 25.8409C34.226 20.022 29.4552 19.7528 27.895 18.2028L30.5574 16.2188C32.5867 18.2674 34.3733 20.4104 34.3733 21.1151Z"
+                                    fill="#CBE2FF" />
+                                <path
+                                    d="M25.0399 11.8438H20.2666C20.272 11.8438 20.2774 11.8442 20.2832 11.8442C26.1401 11.9901 26.4112 16.7299 27.9713 18.2799L29.9683 15.6349C27.9062 13.6188 25.7493 11.8438 25.0399 11.8438Z"
+                                    fill="#CBE2FF" />
+                                <path
+                                    d="M34.3737 21.1163V21.9362C34.3737 20.2101 32.9648 18.8103 31.2274 18.8103H29.3125C28.2353 18.8103 27.3616 17.9423 27.3616 16.8721V14.9696C27.3616 13.2435 25.9527 11.8438 24.2153 11.8438H25.0406C26.5265 11.8438 27.9521 12.4303 29.0027 13.4742L32.7326 17.1799C33.7833 18.2237 34.3737 19.64 34.3737 21.1163Z"
+                                    fill="#BED8FB" />
+                                <path
+                                    d="M32.1183 24.2114H16.7001C16.397 24.2114 16.1514 23.9673 16.1514 23.6662C16.1514 23.3652 16.397 23.1211 16.7001 23.1211H32.1183C32.4214 23.1211 32.667 23.3652 32.667 23.6662C32.667 23.9672 32.4213 24.2114 32.1183 24.2114Z"
+                                    fill="#617881" />
+                                <path
+                                    d="M32.1183 26.4516H16.7001C16.397 26.4516 16.1514 26.2075 16.1514 25.9065C16.1514 25.6054 16.397 25.3613 16.7001 25.3613H32.1183C32.4214 25.3613 32.667 25.6054 32.667 25.9065C32.667 26.2075 32.4213 26.4516 32.1183 26.4516Z"
+                                    fill="#617881" />
+                                <path
+                                    d="M32.1183 28.6938H16.7001C16.397 28.6938 16.1514 28.4497 16.1514 28.1486C16.1514 27.8476 16.397 27.6035 16.7001 27.6035H32.1183C32.4214 27.6035 32.667 27.8476 32.667 28.1486C32.667 28.4497 32.4213 28.6938 32.1183 28.6938Z"
+                                    fill="#617881" />
+                                <path
+                                    d="M22.3635 30.934H16.6996C16.3965 30.934 16.1509 30.6899 16.1509 30.3889C16.1509 30.0878 16.3965 29.8438 16.6996 29.8438H22.3635C22.6666 29.8438 22.9122 30.0878 22.9122 30.3889C22.9122 30.6899 22.6666 30.934 22.3635 30.934Z"
+                                    fill="#617881" />
+                                <path
+                                    d="M22.364 17.9946H16.7001C16.397 17.9946 16.1514 17.7505 16.1514 17.4494C16.1514 17.1484 16.397 16.9043 16.7001 16.9043H22.364C22.6671 16.9043 22.9126 17.1484 22.9126 17.4494C22.9126 17.7505 22.6671 17.9946 22.364 17.9946Z"
+                                    fill="#617881" />
+                            </svg>
+                        </div>
+
+                        @if(foodPicture?.size ){
+                        <span class="text-sm font-medium text-rose-900">
+                            {{foodPicture?.name}} </span>
+                        }@else {
+                        <span class=" font-medium text-rose-900">
+                            Drag and drop file here or <span class="downloanText">browse</span> </span>
+                        }
+                        <div class="text-gray-400 mt-4">Accepted file format is .CSV</div>
+
+                        <input id="license-upload" (change)="upLoadPicture($event)" type="file" class="hidden" />
+                    </label>
+                </div>
+                <div class="flex flex-col justify-center items-center  mt-6  ">
+                    <!-- <p-button class="w-full">Save Menu</p-button> -->
+                    <button pButton class="button w-full bg-p p-4 rounded-2xl  font-bold ">Save Menu</button>
+                </div>
+            </div>
+        </p-tabpanel>
+
+    </p-tabpanels>
+</p-tabs>

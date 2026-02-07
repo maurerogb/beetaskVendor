@@ -1,0 +1,23 @@
+.p-select {
+    width: 100% !important;
+}
+.bg-white {
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1)) /* #ffffff */;
+}
+.p-inputtext.p-variant-filled {
+    border: none !important;
+}
+.border-2 {
+    border-width: 2px;
+}
+.border-gray-400 {
+    --tw-border-opacity: 1;
+    border-color: rgb(156 163 175 / var(--tw-border-opacity, 1)) /* #9ca3af */;
+}
+.border-dashed {
+    border-style: dashed;
+}
+.cursor-pointer {
+    cursor: pointer;
+}

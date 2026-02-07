@@ -1,0 +1,49 @@
+<div class="flex justify-between payout-banner mt-6 h-[47px]">
+
+    <div class="">
+        <div class="font-bold text-xl">This Week’s Payout <span class="font-bold text-2xl">₦45,000</span></div>
+        <div class="mt-2">All payout is made every week on Friday’s</div>
+    </div>
+    <div class="">
+        <div class="flex flex-row">
+            <label class="mt-2 font-bold" for="">Payment Date</label>
+            <div class=" border cursor-pointer bg-white shadow-md m-2 px-3 py-3"> <i class="pi pi-calendar mx-3"></i>
+                {{today | ordinalDate}} </div>
+        </div>
+        <div class="flex flex-row justify-end">
+            <label class="mt-2 font-bold " for="">Bank</label>
+            <div class=" border cursor-pointer bg-white shadow-md m-2 px-3 py-3">Bank {{bankAccount | maskNumber}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="flex justify-between mt-6">
+    <label class="font-bold text-xl">Payout History Table</label>
+    <div class="flex flex-row">
+        <input type="text" [size]="'small'" class="search-input mr-6" pInputText />
+        <div class="rounded-md border cursor-pointer pt-3 px-4 flex items-center justify-between shadow-md bg-white">
+            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 10H15M2.5 5H17.5M7.5 15H12.5" stroke="#344054" stroke-width="1.67" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span class="ml-2 font-bold">Filters</span>
+        </div>
+    </div>
+</div>
+
+<div class="mt-12">
+    <p-table [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr class="bg-black">
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-product>
+            <tr>
+
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

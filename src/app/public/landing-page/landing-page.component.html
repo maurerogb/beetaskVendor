@@ -1,0 +1,328 @@
+<div class="pl-24 pt-8 pr-24">
+
+    <nav class="flex flex-row items-center justify-between text-center   rounded-lg">
+
+        <div class="bg-[#32240C] pl-5 pt-2 pb-2 pr-5  rounded-full">
+            <bt-landing-logo-svg></bt-landing-logo-svg>
+        </div>
+
+        <div class="flex gap-4 bg-[#EBD3CE]  p-3 rounded-full">
+            <a href="#"
+                class=" cursor-pointer font-semibold p-3 border-b-4 shadow-sm shadow-[#992409] rounded-full pt-2 pb-2 pl-5 pr-5">Home</a>
+            <a href="#"
+                class=" cursor-pointer font-semibold p-3 border-b-4 shadow-sm shadow-[#992409] rounded-full pt-2 pb-2 pl-5 pr-5">FAQ's</a>
+            <a href="#"
+                class=" cursor-pointerfont-bold p-3 border-b-4 shadow-sm shadow-[#992409] rounded-full pt-2 pb-2 pl-5 pr-5">Contact</a>
+            <a href="#"
+                class="  cursor-pointer font-semibold p-3 border-b-4 shadow-sm shadow-[#992409] rounded-full pt-2 pb-2 pl-5 pr-5">Company</a>
+
+        </div>
+
+        <div class="flex gap-3 bg-[#EBD3CE] p-3 rounded-full">
+            <a routerLink="vendor/onboarding/login"
+                class="  cursor-pointer border-b-4 shadow-sm shadow-[#992409] rounded-full pt-2 pb-2 pl-5 pr-5">login</a>
+            <a routerLink="vendor/onboarding/registration"
+                class="  cursor-pointer border-b-4 shadow-sm shadow-[#992409] rounded-full pt-2 pb-2 pl-5 pr-5">Get
+                Started</a>
+
+        </div>
+    </nav>
+
+    <section class="w-full pt-20 h-screen-80   ">
+        <div class="container mx-auto text-center px-6">
+            <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+                Get Your Favorite Meals <br />
+                Delivered Fast
+            </h1>
+
+
+            <p class="mt-4 text-gray-600">
+                Experience fast delivery anywhere in your city
+            </p>
+
+            <!-- Store Buttons -->
+            <div class="flex justify-center items-center gap-4 mt-8">
+
+                <app-store></app-store>
+                <bt-playstore-black></bt-playstore-black>
+            </div>
+
+            <img src="../../../assets/shopping-bg-img.png" alt="">
+            <!-- <div class=" "> 
+                <img src="../../../assets/shopping-bg-img.png" alt="">
+            </div> -->
+
+
+
+        </div>
+    </section>
+
+    <section class="w-full pt-20 h-screen-90 bg-[#FCF8F8]">
+
+        <div class="container mx-auto text-center px-6">
+
+            <span class="text-3xl font-bold  mb-8">Get Started in just 3 steps</span>
+
+            <div class="flex justify-center mt-12 gap-6 mb-12">
+                <span class="bg-[#FF7A00] text-white px-6 py-2 rounded-full">Download App</span>
+                <span class="bg-gray-200 px-6 py-2 rounded-full">Create Account</span>
+                <span class="bg-gray-200 px-6 py-2 rounded-full">Place Order</span>
+                <span class="bg-gray-200 px-6 py-2 rounded-full "><bt-bike></bt-bike></span>
+            </div>
+
+            <div class="flex flex-col items-center mt-8 gap-4 mb-4">
+                <label>🥘 Browse & Order – Choose meals from top restaurants</label>
+
+                <bt-flying-chips></bt-flying-chips>
+            </div>
+
+            <!-- <img src="assets/steps-illustration.png" class="w-96 mx-auto" /> -->
+        </div>
+
+    </section>
+
+    <section class="w-full  pt-20 h-screen z-50 bg-white">
+
+        <div class="container mx-auto text-center px-6">
+            <div class="w-[200px] mx-auto flex flex-col items-center">
+                <span class="text-3xl font-bold break-words mb-3">
+                    Why users, vendors, and riders love our platform</span>
+                <label for="">From your favorite restaurants, to your doorstep, in minutes.</label>
+            </div>
+
+
+            <div class="grid grid-cols-12 mt-12 gap-6 mb-12">
+                <div class="col-span-6 col-start-2">
+                    <div class=" ">
+                        <div class=" flex  items-center justify-start">
+                            <div class="text-xl  font-semibold ">
+                                <bt-bulls-eye></bt-bulls-eye>
+                            </div>
+                            <div class="text-xl  font-semibold ml-2">Real-time Order Updates</div>
+                        </div>
+                        <div class=" flex flex-col gap-y-3 text-left ">
+                            <p class="mt-3">Stay in the know from checkout to delivery.</p>
+                            <p>
+                                Get instant notifications at every stage—when your order is received, prepared, picked
+                                up,
+                                and delivered
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-3 ">
+                        <div class=" flex  items-center justify-start">
+                            <div class="text-xl  font-semibold ">
+                                <bt-bulls-eye></bt-bulls-eye>
+                            </div>
+                            <div class="text-xl  font-semibold ml-2">Fast & Reliable Dispatch</div>
+                        </div>
+                        <div class=" flex flex-col gap-y-3 text-left ">
+                            <p class="mt-3">Your food, fresh and on time.</p>
+                            <p>
+                                Our trained dispatch riders ensure quick pickup and smooth delivery to your doorstep.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 ">
+                        <div class=" flex  items-center justify-start">
+                            <div class="text-xl  font-semibold ">
+                                <bt-bulls-eye></bt-bulls-eye>
+                            </div>
+                            <div class="text-xl  font-semibold ml-2">Vendor Portal Access</div>
+                        </div>
+                        <div class=" flex flex-col gap-y-3 text-left ">
+                            <p class="mt-3">Empowering restaurants, big or small.</p>
+                            <p>
+                                Vendors can manage menus, view orders, update availability, and grow their customer base
+                                seamlessly.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-span-4  items-end justify-center ">
+                    <bt-phone></bt-phone>
+
+                </div>
+            </div>
+
+
+            <!-- <img src="assets/steps-illustration.png" class="w-96 mx-auto" /> -->
+        </div>
+
+    </section>
+
+    <section class="w-full h-10 pt-20 h-screen-110 z-50 bg-[#FEF0D8]">
+
+        <div class="container mx-auto text-center px-6">
+            <div class="w-[200px] mx-auto flex flex-col items-center">
+                <span class="text-3xl font-bold break-words mb-3">
+                    Joining Our Growing Platform </span>
+                <label for="">Whether you’re craving great food, running a kitchen, or ready to hit the road there’s a
+                    place for you here</label>
+            </div>
+
+            <div class="flex justify-center mt-12 gap-6 mb-3">
+                <span class="bg-gray-200 font-bold px-6 py-2 rounded-full">Customer</span>
+                <span class=" bg-[#FF7A00] font-bold text-white px-6 py-2 rounded-full">Vendor</span>
+                <span class="bg-gray-200 font-bold px-6 py-2 rounded-full">Rider</span>
+            </div>
+
+            <div class="grid grid-cols-12 items-center ml-20  gap-6 pb-24">
+                <div class=" col-span-6 ml-6">
+                    <div class=" pl-6  ">
+                        <div class=" text-left ">
+
+                            <div class="text-3xl  font-semibold ">Grow your food business with us.</div>
+                        </div>
+                        <div class=" flex justify-between">
+                            <div class=" flex flex-col gap-y-3 text-left ">
+                                <p class="mt-3">Reach more customers, manage orders effortlessly, and increase your
+                                    revenue.
+                                </p>
+                                <ul class="list-disc ml-6">
+                                    <li>Easy menu management</li>
+                                    <li>Real-time order tracking</li>
+                                    <li>Insights to boost your sales</li>
+                                    <li>Business insights & support</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-span-4  items-end justify-center ">
+
+                    <div class="object-cover h-80 w-80  ">
+                        <bt-bowl class=""></bt-bowl>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- <img src="assets/steps-illustration.png" class="w-96 mx-auto" /> -->
+        </div>
+
+    </section>
+
+    <section class="w-full h-10 pt-20 h-screen-110  bg-white">
+
+        <div class="grid grid-cols-12   px-6">
+
+            <div
+                class=" col-span-8 col-start-3 border-8 bg-p border-orange-500 rounded-2xl bottom-133 h-screen-90 bg-[#FCC05B] ">
+
+                <div class="w-[200px] mt-8 mx-auto flex flex-col items-center">
+                    <span class="text-3xl font-bold break-words mb-3">
+                        Joining Our Growing Platform </span>
+                    <div class="flex justify-center   gap-6 mb-3">
+                        <span class=" border font-bold px-6 py-2 rounded-full">🙋‍♀️ For Customers</span>
+                        <span class=" border font-bold text-white px-6 py-2 rounded-full">Vendor</span>
+                        <span class=" border font-bold px-6 py-2 rounded-full">Rider</span>
+                    </div>
+
+                    <div class=" w-[200px]  mx-auto flex flex-col text-left items-start    gap-3 mt-6">
+                        <div class="flex flex-col gap-y-6 text-left ">
+                            <label class="  font-bold">Q: How do I place an order?</label>
+                            <label class=" mt-3 ">A: Browse our app or website, select your favorite meals, add them to
+                                your cart,
+                                and proceed to checkout. Follow the prompts to complete your order.</label>
+                        </div>
+                        <div class="flex flex-col gap-y-6 text-left ">
+                            <label class="  font-bold">Q: Can I track my delivery in real-time?</label>
+                            <label class=" mt-3 ">A: Yes! Once your order is picked up, you'll see the rider’s location
+                                on a live map and get status updates at every step.</label>
+                        </div>
+                        <div class="flex flex-col gap-y-6 text-left ">
+                            <label class="  font-bold">Q: What payment methods do you accept?</label>
+                            <label class=" mt-3 ">A: We accept debit/credit cards, mobile wallets, and cash on delivery
+                                (in supported areas).</label>
+                        </div>
+                        <div class="flex flex-col gap-y-6 text-left ">
+                            <label class="  font-bold">Q: What if I have a problem with my order?</label>
+                            <label class=" mt-3 ">A: You can contact customer support via the app or reach out directly
+                                to the restaurant or rider using the provided chat/call buttons.</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="w-full pt-20 h-80 z-50 bg-[#FCF8F8]">
+        <div class="grid grid-cols-12 mx-auto text-center  px-6">
+
+            <div class="col-span-6 w-60 flex flex-col ml-10 col-start-2">
+                <span class="text-4xl font-bold break-words mb-3">
+                    Your next meal is just a tap away</span>
+                <label for="">Discover great food, get real-time updates, and enjoy fast delivery all in one
+                    app.</label>
+
+                <div class="flex justify-center items-center gap-4 mt-8">
+
+                    <app-store></app-store>
+                    <bt-playstore-black></bt-playstore-black>
+                </div>
+            </div>
+            <div class="col-span-4  items-start justify-center mb-6">
+                <bt-half-phone class="positon-relative"></bt-half-phone>
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+    <section class="w-full p-10 h-64 z-auto bg-[#330C03]">
+
+        <div class=" mx-auto text-center text-[#EBD3CE] px-6">
+            <div class="flex justify-between">
+                <div class="items-end">
+                    <bt-footer-logo></bt-footer-logo>
+                </div>
+                <div class="flex flex-col items-start ">
+                    <span class="text-left">Stay up to date</span>
+                    <div>
+                        <input type="text" class=" mt-2  text-[#330C03] px-2 py-2 rounded-md" />
+                        <button type="button" class="bg-p pl-4 pt-2 pb-2 pr-4 ml-3 rounded-full">Subscribe</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-4 ">
+                <div class="flex justify-start font-bold">
+                    <span class=" px-2 py-2 rounded-full">FAQ’S</span>
+                    <span class=" px-2 py-2 rounded-full">Contact</span>
+                    <span class=" px-2 py-2 rounded-full">Company</span>
+                </div>
+                <div class="flex flex-row px-3">
+                    <label class=""> Email Address: info&#64;beetask.com </label>
+                    <label class="ml-3"> Phone Number: +234 893 0987 1234 </label>
+                </div>
+            </div>
+            <p-divider />
+            <div class="mt-4 flex justify-between items-center">
+                <label for="">&copy; 2024 Beetask. All rights reserved.</label>
+                <div class="flex gap-3  ">
+                    <a> <i class="pi pi-twitter text-gradient-orange p-1"></i></a>
+                    <a> <i class="pi pi-linkedin text-gradient-orange p-1"></i></a>
+                    <a> <i class="pi pi-facebook text-gradient-orange p-1"></i></a>
+                </div>
+
+            </div>
+        </div>
+
+
+    </section>
+</div>

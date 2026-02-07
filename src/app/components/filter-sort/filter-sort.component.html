@@ -1,0 +1,17 @@
+<div class="flex flex-row items-center">
+    @if (hideSort) {
+    <div class="flex flex-row gap-2">
+        <app-sort></app-sort>
+        <span>Sort</span>
+    </div>
+    }
+
+    @if (hideFilter) {
+    <p-divider layout="vertical"></p-divider>
+    <div class="flex flex-row gap-2 items-center">
+        <app-filter-svg></app-filter-svg>
+        <span>Filters</span>
+    </div>
+    }
+
+</div>

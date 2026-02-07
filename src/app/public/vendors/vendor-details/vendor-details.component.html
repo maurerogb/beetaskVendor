@@ -1,0 +1,114 @@
+<app-registration-banner [showLink]="false" class=" "></app-registration-banner>
+
+<div class=" pt-28  container  ">
+    <div class=" flex flex-col wrapper gap-4 pb-3 ">
+        <div class="gap-top-2 gap-bottom">
+            <div class=" register-header ">
+                <div class="m-0  font-semibold text-4xl font-bold justify-start">Welcome back!</div>
+                <!-- <div class="subtext">Join thousands of vendors delivering amazing meals through our platform.</div> -->
+            </div>
+              <div [formGroup]="vendorDetailsForm!" class="w-full flex flex-col gap-y-2 px-5">
+                        <div class="flex-auto  justify-start text-left">
+                            <label for="restaurantName" class=" block font-semibold ">Restaurant Name</label>
+
+                            <input placeholder="Restaurant Name" type="text" formControlName="restaurantName"
+                                id="phoneNumber" pInputText class="wid-full" />
+
+                        </div>
+                        <div class="flex-auto mt-2 justify-start text-left">
+                            <label for="businessAddress" class=" block font-semibold  ">Business Address</label>
+                            <input pInputText placeholder="Business Address" type="text"
+                                formControlName="businessAddress" id="businessAddress"
+                                class="wid-full  rounded-input " />
+
+                        </div>
+                        <div class="flex-auto justify-start text-left ">
+                            <label for="businessTypes" class=" block font-semibold ">Business Type</label>
+                            <div class="mb-3">
+                                <p-select id="businessTypes" [options]="businessTypes()"
+                                    formControlName="businessTypeId" [checkmark]="true" optionLabel="businessTypeName"
+                                    optionValue="id" placeholder="Select a State" class="w-full   rounded-input" />
+                            </div>
+                            <div class="mt-2">
+                                <label class="block font-semibold ">Phone Number</label>
+                                <div class="flex items-center bg-white rounded-full px-4 shadow-sm">
+                                    <img src="https://flagcdn.com/ng.svg" alt="NG" class="w-6 h-4 rounded mr-2">
+                                    <span class="text-gray-500">(+234)</span>
+                                    <input formControlName="phoneNumber" type="tel" placeholder="000-0909-0900"
+                                        pInputText class="wid-full" />
+                                </div>
+                            </div>
+
+
+                            <!-- State / City -->
+                            <div class="mt-2">
+
+                                <div class="flex space-x-3">
+                                    <!-- State -->
+                                    <div class="relative w-1/2 space-x-2">
+                                        <div class="w-full">
+                                            <label class="block font-semibold ">State</label>
+
+                                            <p-select [options]="states()" formControlName="stateName"
+                                                (onChange)="getlga($event.value)" [checkmark]="true" optionLabel="name"
+                                                optionValue="id" placeholder="Select a State"
+                                                class="w-full md:w-56  rounded-input" />
+                                        </div>
+
+                                    </div>
+                                    <!-- City -->
+                                    <div class="">
+                                        <label class="block font-semibold ml-2 mb-1">LGA</label>
+
+                                        <p-select [options]="lgas()" formControlName="lgaName"
+                                            (onChange)="getCities($event.value)" [checkmark]="true" optionLabel="name"
+                                            optionValue="id" placeholder="Select a State"
+                                            class="w-full md:w-56  rounded-input" />
+                                        <!-- <input
+                                        type="text"
+                                        placeholder="Enter City"
+                                        class="w-1/2 py-2 px-3 rounded-lg border border-gray-300 bg-white text-gray-600 focus:outline-none"
+                                    /> -->
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block font-semibold ml-2 mb-1">City</label>
+
+                                    <p-select [options]="cities()" formControlName="cityName" [checkmark]="true"
+                                        optionLabel="name" optionValue="id" placeholder="Select a City"
+                                        class="w-full md:w-56  rounded-input" />
+                                </div>
+                            </div>
+
+                            <!-- Upload Section -->
+                            <div class="flex flex-row md:flex-row mt-3  gap-4">
+                                <label for="license-upload"
+                                    class=" flex justify-center w-15 items-center cursor-pointer border-2 border-dashed border-gray-400 rounded-lg p-4 text-center space-y-2 hover:bg-rose-50">
+                                    <span class="text-3xl text-rose-900">📜</span>
+                                    <span class="text-sm font-medium text-rose-900">{{licenseFile?.name ?licenseFile?.name : 'Upload Document'}}</span>
+                                    <input id="license-upload" (change)="onLicenseSelected($event)" type="file"
+                                        class="hidden" />
+                                </label>
+                                <label for="logo-upload"
+                                    class="flex justify-center w-15 items-center cursor-pointer border-2 border-dashed border-gray-400 rounded-lg p-4 text-center space-y-2 hover:bg-rose-50">
+                                    <span class="text-3xl text-rose-900">🖻</span>
+                                    <span class="text-sm font-medium text-rose-900">{{logoFile?.name ? logoFile?.name : 'Upload logo'}}</span>
+                                    <input id="logo-upload" (change)="onLogoSelected($event)" type="file"
+                                        class="hidden" />
+                                </label>
+                                <!-- Logo -->
+                                <!-- <div class="border-2 border-dashed border-gray-400 rounded-lg p-4 text-center space-y-2">
+                        <div class="text-3xl text-rose-900">👤</div>
+                        <div class="text-sm font-medium text-rose-900">Upload logo</div>
+                        <input type="file" class="hidden" />
+                        </div> -->
+                            </div>
+                            <button (click)="submitDetails()" pButton pRipple rounded class="wid-full bg-p mt-4 px-4"
+                                label="Get Started as Vendor"></button>
+                        </div>
+                    </div>
+        </div>
+    </div>
+</div>
+
+

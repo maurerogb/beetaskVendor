@@ -1,0 +1,145 @@
+<div class="bg-white p-4  rounded-md border border-gray-200 space-y-4">
+    <div class="p-4">
+        <div class="mb-4">
+            <h2 class="text-lg font-semibold">Personal Info</h2>
+        </div>
+        <div [formGroup]="profileForm!">
+            <div class="grid grid-cols-2 gap-4">
+
+                <div>
+                    <label class="text-sm">Full Name</label>
+                    <input type="text" formControlName="fullName" class="w-full px-3 py-2 border rounded-lg" />
+                </div>
+
+                <div>
+                    <label class="text-sm">Phone Number</label>
+                    <div class="flex">
+                        <select class="border rounded-l-lg px-2">
+                            <option>🇳🇬 +234</option>
+                        </select>
+                        <input type="text" formControlName="phoneNumber" class="flex-1 px-3 py-2 border rounded-r-lg" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <label class="text-sm ">Email Address</label>
+                <input type="email" formControlName="emailAddress" class="w-full px-3 py-2 border rounded-lg" />
+            </div>
+        </div>
+
+
+        <div class="flex gap-4 mt-4">
+            <button class="bg-orange-600 text-white px-6 py-2 rounded-lg">Save changes</button>
+            <button class="border border-gray-400 px-6 py-2 rounded-lg">Cancel Changes</button>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white p-6 mt-5 rounded-md border border-gray-200 space-y-4">
+    <div class="p-4">
+        <div class="mb-4">
+            <h2 class="text-lg font-semibold">Restaurant Info</h2>
+        </div>
+        <div  [formGroup]="businessForm!">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-sm">Restaurant Name</label>
+                    <input pInputText type="text" formControlName="businessName" class="w-full  py-2 border rounded-lg" />
+                </div>
+
+                <div class="">
+                    <label class="text-sm">Phone Number</label>
+                    <div class="flex">
+                        <select class=" border-r-0 rounded-l-lg px-2 ">
+                            <option>🇳🇬 +234</option>
+                        </select>
+                        <input type="text" formControlName="businessPhone" class="flex-1 px-3 py-2 border rounded-r-lg" />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <vendor-upload [imgUrl]="logoString()"></vendor-upload>
+            </div>
+
+            <div class="mt-3">
+                <label class="text-sm">Cuisine Type</label>
+                <input type="email" formControlName="CuisineType" class="w-full px-3 py-2 border rounded-lg" />
+            </div>
+            <div class="mt-3">
+                <label class="text-sm">Restaurant Bio</label>
+                <input type="email" formControlName="restaurantBio" class="w-full px-3 py-2 border rounded-lg" />
+            </div>
+
+            <div class="flex gap-4 mt-4">
+                <button class="bg-orange-600 text-white px-6 py-2 rounded-lg">Save changes</button>
+                <button class="border border-gray-400 px-6 py-2 rounded-lg">Cancel Changes</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div [formGroup]="busiDocumentsForm!" class="bg-white p-6  mt-5 rounded-md border border-gray-200 space-y-4">
+    <div class="p-4">
+        <div class="mb-4">
+            <h2 class="text-lg font-semibold">Business Documents</h2>
+            <span class="text-sm text-gray-500">Your vendor account won’t be visible until all required documents are
+                uploaded.</span>
+
+        </div>
+
+        <div class="flex justify-between mt-3 gap-4 p-2">
+            <div>
+                <label class="text-sm ">CAC Registration Certificate</label>
+            </div>
+            <div class="flex gap-3">
+                <label for="ingredient3" class="ml-2"> Verified </label>
+                <p-checkbox inputId="ingredient3" [disabled]="true" class="yellow-checkbox" name="pizza" formControlName="isCacCertificateValified" />
+            </div>
+        </div>
+        <div class="flex justify-between mt-3 gap-4 bg-[#EBD3CE] p-3 rounded-md">
+            <div>
+                <label  class="text-sm ">{{cACRegistrationUrl() ? cACRegistrationUrl() : 'No CAC Registration Certificate Uploaded'}}
+                </label>
+            </div>
+            <div class="flex gap-3">
+                <label for=" cac-upload" class=" cursor-pointer  ml-2">  <input id="cac-upload" (change)="uploadFile($event)" type="file"
+                class="hidden" /> Change </label>
+            </div>
+        </div>
+        <div class="flex justify-between mt-3 gap-4 p-2">
+            <div>
+                <label class="text-sm ">Food Handling Permit</label>
+            </div>
+            <div class="flex gap-3">
+                <label for="ingredient1" class="ml-2"> Verified </label>
+                <p-checkbox [disabled]="true" formControlName="isFoodHandlingPermitValified"   inputId="ingredient1" styleClass="yellow-checkbox" name="pizza" value="Verified" />
+            </div>
+        </div>
+        <div class="flex justify-between mt-3 gap-4 bg-[#EBD3CE] p-3 rounded-md">
+            <div>
+                <label class="text-sm ">{{foodHandlingPermitUrl()? foodHandlingPermitUrl() : 'No Food Handling Permit Uploaded' }} </label>
+            </div>
+            <div class="flex gap-3">
+                <label for="fhp-upload" class=" cursor-pointer  ml-2">  <input id="fhp-upload" (change)="uploadFile($event)" type="file"
+                class="hidden" /> Change </label>
+            </div>
+        </div>
+        <div class="flex justify-between mt-3 gap-4 p-2">
+            <div>
+                <label class="text-sm ">Bank Account Verification</label>
+            </div>
+            <div class="flex gap-3">
+                <label for="ingredient2" class="ml-2"> Verified </label>
+                <p-checkbox [disabled]="true" formControlName="isBankAccountValified"  inputId="ingredient2" styleClass="yellow-checkbox" name="pizza" value="Verified" />
+            </div>
+        </div>
+
+        <div class="flex gap-4 mt-4">
+            <button class="bg-orange-600 text-white px-6 py-2 rounded-lg">Save changes</button>
+            <button class="border border-gray-400 px-6 py-2 rounded-lg">Cancel Changes</button>
+        </div>
+    </div>
+</div>

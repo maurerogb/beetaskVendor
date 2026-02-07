@@ -1,0 +1,802 @@
+<div class="h-screen m-4">
+    @if (vendorData()) {
+    <div>
+        <div class="flex justify-between items-center">
+            <div class="flex flex-col">
+                <span class="text-[#1F0702] text-2xl font-bold">Vendor Management </span>
+                <span class="text-lg">Keep track of vendor and their security ratings.</span>
+            </div>
+            <div>
+                <button class=" rounded-2xl bg-p pt-2 pb-2 pr-4  pl-4" (click)="openVendorForm()">Add Vendor</button>
+            </div>
+        </div>
+
+        <div class="flex justify-between mt-6">
+            <div class="w-2/4">
+                <p-iconfield>
+                    <p-inputicon class="pi pi-search" />
+                    <input class="w-full" type="text" pInputText placeholder="Search" />
+                </p-iconfield>
+            </div>
+            <div class="flex flex-row gap-2">
+                <app-date-filter></app-date-filter>
+                <app-filter></app-filter>
+            </div>
+        </div>
+        <div class="mt-6">
+            <p-table [value]="vendorData()" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template #header>
+                    <tr class="bg-black">
+                        <th>Business</th>
+                        <th>Category</th>
+                        <th>phoneNumber</th>
+                        <th>Address</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Added On</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-item>
+                    <tr class="pt-2 ">
+                        <td class="flex items-center  justify-start border-none">
+                            <div class="rounded-full w-10">
+                                <p-image rounded class="rounded-full" [src]="item.businessLogo" alt="Image" width="35"
+                                    [preview]="true" />
+                            </div>
+
+                            <div class=" ml-4 flex flex-col justify-start">
+                                <span>{{item.businessName}}</span>
+
+                            </div>
+                        </td>
+                        <td>{{item.businessCategory}}</td>
+                        <td>{{item.phoneNumber}}</td>
+                        <td class="">{{ item.city}} </td>
+                        <td class="">
+                            {{item.rating}} <i class="pi pi-star-fill" style="color: orange;"></i>
+                            <!-- <p-tag class="rounded-xl bg-orange-200" [value]="'10 %'"></p-tag> -->
+                        </td>
+                        <td class="text-sm ">{{getStatus(item.status)}}</td>
+                        <td>{{item.createdOn | date}}</td>
+                        <td> <a class="font-bold text-p-color" (click)="setSelectedVendor(item)"
+                                href="javascript:void(0)">View</a>
+                        </td>
+                    </tr>
+
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    } @else {
+    <div class=" flex mt-20  justify-center items-center ">
+        <div class="w-1/2">
+            <div class="  card flex flex-col gap-4  items-center justify-center">
+                <app-empty-vendor class="mt-6"></app-empty-vendor>
+                <div class=" flex flex-col w-3/4 items-center text-center align-middle">
+                    <span class="text-2xl mb-3 text-[#1F0702] font-bold">Vendor Management</span>
+                    <span>You currently have no vendor registered on the system. add new vendor.</span>
+                    <button class="bg-p rounded-2xl pt-2 pb-2 pr-6 pl-6 m-3 " (click)="openDetails()"> Add
+                        Vendors</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    }
+
+
+</div>
+<p-dialog #content [(visible)]="showDialog" [closable]="false" [style]="{width: '750px' }" [modal]="true"
+    class="p-fluid">
+    @let vendor = selectedVendor();
+    <ng-template #header>
+        <div class="flex flex-col w-full gap-4">
+
+
+            <div class="flex justify-between w-full">
+                <div></div>
+                <app-cancel class="cursor-pointer" (click)="closeDetails()"></app-cancel>
+            </div>
+            <div class="flex justify-between w-full items-center ">
+
+                <div class="flex flex-row space-x-3">
+                    <img [src]="selectedVendor()?.businessLogo" class="rounded-full" width="100" height="100" alt="">
+
+                    <div class="flex flex-col">
+                        <div class="flex gap-2">
+                            <span class=" text-2xl">{{vendor!.businessName}}</span>
+                            <p-tag [rounded]="true" [severity]="getSeverity(vendor!.status)"
+                                [value]=" getStatus(vendor!.status)"></p-tag>
+                        </div>
+                        <span class="font-bold text-xl text-[#5B5858]">{{vendor!.businessCategory}}</span>
+                        <span class="text-xl text-[#5B5858]">Joined Since: {{vendor!.createdOn |date}}</span>
+                    </div>
+
+
+                </div>
+                @if (vendor!.status == 0) {
+                <div class="">
+                    <button pButton pRipple label="Accept" rounded (click)="acceptRequest(vendor!)" icon="pi pi-check"
+                        class="mr-3"></button>
+                    <button pButton pRipple label="Reject" rounded icon="pi pi-times" (click)="rejectVendor(vendor!)"
+                        class="p-button-cancel"></button>
+                    <!-- <i class="pi pi-ellipsis-v"></i> -->
+                </div>
+                } @else {
+                <i class="pi pi-ellipsis-v cursor-pointer" (click)="op.toggle($event)"></i>
+
+                }
+
+            </div>
+        </div>
+        <p-popover #op>
+            <div class="flex flex-col gap-4 w-[25rem]">
+                <div>
+
+                    <ul class="list-none p-0 m-0 flex flex-col gap-4">
+
+                        <li (click)="flagVendor(vendor)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <bt-flag-icon> </bt-flag-icon>
+                                <span>Flag</span>
+                            </div>
+                        </li>
+                        <li (click)="suspendVendor(vendor)" class="flex items-center cursor-pointer gap-2">
+                            <div class="flex items-center font-semibold gap-2 text-muted-color ml-auto text-sm">
+                                <bt-trash-icon> </bt-trash-icon>
+                                <span>Suspend</span>
+                            </div>
+                        </li>
+                        <li (click)="deleteVendor(vendor)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <bt-trash-icon> </bt-trash-icon>
+                                <span>Delete Account</span>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </p-popover>
+    </ng-template>
+
+    <ng-template pTemplate="content" class="bg-p">
+        <div>
+            <p-tabs value="0">
+                <p-tablist>
+                    <p-tab value="0">Business Information</p-tab>
+                    <p-tab value="1">Performance</p-tab>
+                    <p-tab value="2">Payouts</p-tab>
+                    <p-tab value="3">Menu</p-tab>
+                </p-tablist>
+                <p-tabpanels>
+                    <p-tabpanel value="0">
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+                            <div class="p-6">
+                                <div class="m-0">
+                                    <span class="ml-0 text-lg font-bold">Contact Information</span>
+                                    <div class="grid grid-cols-12 mt-2 ">
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Vendor ID Number</span>
+                                            <span
+                                                class="text-lg font-semibold">{{vendor!.uuid.substring(vendor!.uuid.length
+                                                - 10)}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Phone Number</span>
+                                            <span class="text-lg font-semibold">{{vendor!.phoneNumber}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">City/State</span>
+                                            <span
+                                                class="text-lg font-semibold">{{vendor!.city}}/{{vendor!.regionOrState}}</span>
+                                        </div>
+                                    </div>
+                                    <div class=" flex flex-col">
+                                        <span class="text-lg">Address</span>
+                                        <span class="text-lg font-semibold">{{vendor!.businessAddress +' '+ vendor!.city
+                                            +'
+                                            '+ vendor!.localGovArea +' '+ vendor!.regionOrState}}</span>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    @let profile = profileDetails();
+                                    <span class="ml-0 text-lg font-bold">Owner’s Information</span>
+                                    <div class="grid grid-cols-12 mt-2 ">
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Owners Name</span>
+                                            <span class="text-lg font-semibold">{{profile!.fullName}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Owners Phone Number</span>
+                                            <span class="text-lg font-semibold">{{profile?.phoneNumber}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Email Address</span>
+                                            <span class="text-lg font-semibold">{{profile?.email}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white border rounded-lg p-6">
+                                <span class="text-xl ml-0 mt-6  font-bold">Business Verification</span>
+                                <div class="mt-2">
+                                    <span class="text-lg">Business Documents</span>
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-6 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class="text-lg font-semibold">CAC Certificate</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-lg font-semibold"> <a
+                                                    href="javascript:void(0)">view</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <span class="text-lg">Food Handleing Documents</span>
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-6 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class="text-lg font-semibold">Food Handleing Documents</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-lg font-semibold"> <a href="javascript:void(0)">view</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </p-scrollpanel>
+                    </p-tabpanel>
+                    <p-tabpanel value="1">
+                        <div class="">
+                            <div class="m-0  mt-2 p-4 bg-[#FFF1E7] rounded-lg">
+                                <span class="ml-0 text-lg font-bold">Performance Metrics</span>
+                                <div class="grid grid-cols-12 mt-3">
+                                    <div class="col-span-3 flex flex-col">
+                                        <span class="text-lg">Total Orders</span>
+                                        <span class="text-lg font-semibold">400</span>
+                                    </div>
+                                    <div class="col-span-3 flex flex-col">
+                                        <span class="text-lg">Revenue</span>
+                                        <span class="text-lg font-semibold">N9000</span>
+                                    </div>
+                                    <div class="col-span-3 flex flex-col">
+                                        <span class="text-lg">Ratings</span>
+                                        <span class="flex items-center mt-1  font-semibold gap-1">
+                                            <span>4.5</span>
+                                            <i class="pi pi-star-fill" style="color: orange;"></i>
+                                            <span class="text-sm">(30 review)</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-span-3 flex flex-col">
+                                        <span class="text-lg">Complaint Count</span>
+                                        <span class="text-lg font-semibold">10</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- <div class="mt-4">
+                                <span class="ml-0 text-lg font-bold">Owner’s Information</span>
+                                <div class="grid grid-cols-12 mt-2 ">
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Owners Name</span>
+                                        <span class="text-lg font-semibold">{{vendor!.vendorId}}</span>
+                                    </div>
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Owners Phone Number</span>
+                                        <span class="text-lg font-semibold">{{vendor!.phoneNumber}}</span>
+                                    </div>
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Email Address</span>
+                                        <span
+                                            class="text-lg font-semibold">{{vendor!.city}}/{{vendor!.regionOrState}}</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="bg-white border rounded-lg mt-6 p-6">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl ml-0   font-bold">Complaint and Dispute List</span>
+                                <div class="flex flex-row items-center">
+                                    <div class="flex flex-row gap-2">
+                                        <app-sort></app-sort>
+                                        <span>Sort</span>
+                                    </div>
+                                    <p-divider layout="vertical"></p-divider>
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <app-filter-svg></app-filter-svg>
+                                        <span>Filters</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <ul class="relative flex gap-8 border-b border-gray-200 text-sm font-medium"
+                                    role="tablist">
+                                    @for (status of statuses; track status; let i = $index) {
+                                    <li role="tab" tabindex="0" (click)="select(i)" (keydown.enter)="select(i)"
+                                        (keydown.space)="select(i)"
+                                        class="relative cursor-pointer px-3 pb-3 outline-none transition-colors focus-visible:text-red-600 "
+                                        [class.text-red-600]="activeIndex() === i">
+                                        {{ status }}
+                                        <!-- underline -->
+                                        <span
+                                            class="absolute left-0 -bottom-[1px] h-[2px] w-full bg-red-600 transform origin-left transition-transform duration-300 ease-out "
+                                            [class.scale-x-100]="activeIndex() === i"
+                                            [class.scale-x-0]="activeIndex() !== i"></span>
+                                    </li>
+                                    }
+                                </ul>
+
+
+                                <div class="mt-3">
+                                    <p-table [tableStyle]="{ 'min-width': '50rem' }">
+                                        <ng-template #header>
+                                            <tr class="bg-black items-center">
+                                                <th>Complaint ID</th>
+                                                <!-- <th>Item Name</th> -->
+                                                <th>Date and Time</th>
+                                                <th>Order ID</th>
+                                                <th>Raised by</th>
+                                                <th>Status</th>
+
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template #body let-product>
+
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+                    </p-tabpanel>
+                    <p-tabpanel value="2">
+                        <div class="p-6">
+                            <div class="m-0">
+                                <span class="ml-0 text-lg font-bold">Contact Information</span>
+                                <div class="grid grid-cols-12 mt-2 ">
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Vendor ID Number</span>
+                                        <span class="text-lg font-semibold">{{vendor!.vendorId}}</span>
+                                    </div>
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Phone Number</span>
+                                        <span class="text-lg font-semibold">{{vendor!.phoneNumber}}</span>
+                                    </div>
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">City/State</span>
+                                        <span
+                                            class="text-lg font-semibold">{{vendor!.city}}/{{vendor!.regionOrState}}</span>
+                                    </div>
+                                </div>
+                                <div class=" flex flex-col">
+                                    <span class="text-lg">Address</span>
+                                    <span class="text-lg font-semibold">{{vendor!.businessAddress +' '+ vendor!.city
+                                        +'
+                                        '+ vendor!.localGovArea +' '+ vendor!.regionOrState}}</span>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <span class="ml-0 text-lg font-bold">Owner’s Information</span>
+                                <div class="grid grid-cols-12 mt-2 ">
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Owners Name</span>
+                                        <span class="text-lg font-semibold">{{vendor!.vendorId}}</span>
+                                    </div>
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Owners Phone Number</span>
+                                        <span class="text-lg font-semibold">{{vendor!.phoneNumber}}</span>
+                                    </div>
+                                    <div class="col-span-4 flex flex-col">
+                                        <span class="text-lg">Email Address</span>
+                                        <span
+                                            class="text-lg font-semibold">{{vendor!.city}}/{{vendor!.regionOrState}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border rounded-lg mt-6 p-6">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl ml-0   font-bold">Complaint and Dispute List</span>
+                                <div class="flex flex-row items-center">
+                                    <div class="flex flex-row gap-2">
+                                        <app-sort></app-sort>
+                                        <span>Sort</span>
+                                    </div>
+                                    <p-divider layout="vertical"></p-divider>
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <app-filter-svg></app-filter-svg>
+                                        <span>Filters</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <ul class="relative flex gap-8 border-b border-gray-200 text-sm font-medium"
+                                    role="tablist">
+                                    @for (status of statuses; track status; let i = $index) {
+                                    <li role="tab" tabindex="0" (click)="select(i)" (keydown.enter)="select(i)"
+                                        (keydown.space)="select(i)"
+                                        class="relative cursor-pointer px-3 pb-3 outline-none transition-colors focus-visible:text-red-600 "
+                                        [class.text-red-600]="activeIndex() === i">
+                                        {{ status }}
+                                        <!-- underline -->
+                                        <span
+                                            class="absolute left-0 -bottom-[1px] h-[2px] w-full bg-red-600 transform origin-left transition-transform duration-300 ease-out "
+                                            [class.scale-x-100]="activeIndex() === i"
+                                            [class.scale-x-0]="activeIndex() !== i"></span>
+                                    </li>
+                                    }
+                                </ul>
+
+
+                                <div class="mt-3">
+                                    <p-table [tableStyle]="{ 'min-width': '50rem' }">
+                                        <ng-template #header>
+                                            <tr class="bg-black items-center">
+                                                <th>Complaint ID</th>
+                                                <!-- <th>Item Name</th> -->
+                                                <th>Date and Time</th>
+                                                <th>Order ID</th>
+                                                <th>Raised by</th>
+                                                <th>Status</th>
+
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template #body let-product>
+
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+                        </div>
+                    </p-tabpanel>
+                    <p-tabpanel value="3">
+                        <div class="flex justify-between items-center">
+                            <div></div>
+                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="openMenu()" type="button">Add Menu</button>
+                        </div>
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+                            <div class="bg-white border rounded-lg mt-6 p-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xl ml-0   font-bold">Vendor's Menu</span>
+                                    <div class="flex flex-row items-center">
+                                        <div class="flex flex-row gap-2">
+                                            <app-sort></app-sort>
+                                            <span>Sort</span>
+                                        </div>
+                                        <p-divider layout="vertical"></p-divider>
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-filter-svg></app-filter-svg>
+                                            <span>Filters</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <div class="mt-3">
+                                        <p-table [value]="productData()!" [tableStyle]="{ 'min-width': '50rem' }">
+                                            <ng-template #header>
+                                                <tr class="bg-black items-center">
+                                                    <th>Menu</th>
+                                                    <th>Category</th>
+                                                    <th>Menu Type </th>
+                                                    <th>Price</th>
+                                                    <th>Status</th>
+                                                    <th></th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #body let-product>
+                                                <tr class="pt-2 ">
+                                                    <td class="flex items-center  justify-start border-none">
+                                                        {{product.productName}}
+                                                    </td>
+                                                    <td>{{product.categoryName}}</td>
+                                                    <td>{{product.menuTypeName}}</td>
+                                                    <td>{{product.price}}</td>
+                                                    <td>
+                                                        <p-toggleswitch (onChange)="toggleProduct(product)"
+                                                            [(ngModel)]="product.instock" ariaLabelledBy="switch3" />
+                                                    </td>
+                                                    <td>
+                                                        <a class="font-bold text-p-color" href="javascript:void(0)"><i
+                                                                (select)="selectVendor(product)"
+                                                                (click)="opp.toggle($event)"
+                                                                class="pi pi-ellipsis-v"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </p-scrollpanel>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+            <p-popover #opp>
+                <div class="flex flex-col gap-4 w-[25rem]">
+                    <div>
+
+                        <ul class="list-none p-0 m-0 flex flex-col gap-4">
+
+                            <li (click)="flagVendor(vendor)"
+                                class="flex items-center font-semibold cursor-pointer gap-2">
+                                <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                    <bt-flag-icon> </bt-flag-icon>
+                                    <span>Flag</span>
+                                </div>
+                            </li>
+                            <li (click)="suspendVendor(vendor)" class="flex items-center cursor-pointer gap-2">
+                                <div class="flex items-center font-semibold gap-2 text-muted-color ml-auto text-sm">
+                                    <bt-trash-icon> </bt-trash-icon>
+                                    <span>Remove</span>
+                                </div>
+                            </li>
+                            <li (click)="deleteVendor(vendor)"
+                                class="flex items-center font-semibold cursor-pointer gap-2">
+                                <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                    <bt-promo-icon> </bt-promo-icon>
+                                    <span>Add Promo</span>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </p-popover>
+        </div>
+    </ng-template>
+
+</p-dialog>
+
+<p-dialog #content [closable]="false" [(visible)]="showVendorForm" [modal]="true" [responsive]="true    "
+    [style]="{width: '750px', minWidth: '350px' }">
+
+    <ng-template #header>
+        <div class="flex justify-between w-full">
+            <div class="text-2xl font-semibold">Add New Vendor</div>
+            <app-cancel class="cursor-pointer" (click)="closeVendorForm()"></app-cancel>
+        </div>
+    </ng-template>
+
+    <div [formGroup]="vendorForm!">
+        <span class="text-lg font-semibold mb-0 pb-0">Business Details</span>
+        <p-divider class="m-0 p-0"></p-divider>
+        <div class="grid grid-cols-12 gap-3 mt-2">
+
+            <div class="col-span-6">
+                <label for="businessName">Business Name <span class=" text-red-600">*</span> </label>
+                <input formControlName="businessName" id="businessName" class="w-full" pInputText type="text">
+                @if ( vendorForm!.controls['businessName'].invalid && (vendorForm!.controls['businessName'].dirty ||
+                vendorForm!.controls['businessName'].touched)) {
+                <small class="p-error  text-red-600">Business Name is required.</small>
+                }
+            </div>
+            <div class="col-span-6">
+                <label for="businessType">Business Type <span class=" text-red-600">*</span> </label>
+                <p-select id="businessType" [options]="businessData()" optionValue="id" optionLabel="businessTypeName"
+                    formControlName="businessType" placeholder="Select a Business Type"
+                    class="w-full rounded-full md:w-56" />
+                @if (vendorForm!.controls['businessType'].invalid && (vendorForm!.controls['businessType'].dirty ||
+                vendorForm!.controls['businessType'].touched)) {
+                <small class="p-error  text-red-600">Business Type is required.</small>
+                }
+            </div>
+            <div class="col-span-6">
+                <label for="email">Email Address <span class=" text-red-600">*</span> </label>
+                <input formControlName="emailBusiness" id="email" class="w-full" pInputText type="text">
+                @if (vendorForm!.controls['emailBusiness'].invalid && (vendorForm!.controls['emailBusiness'].dirty ||
+                vendorForm!.controls['emailBusiness'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['emailBusiness'].errors?.['required']) {
+                    Email Address is required.
+                    } @else if (vendorForm!.controls['emailBusiness'].errors?.['strictEmail']) {
+                    Please enter a valid email address.
+                    }
+                </small>
+                }
+            </div>
+            <div class="col-span-6">
+                <label for="phone">Phone Number <span class=" text-red-600">*</span> </label>
+                <input formControlName="businessPhoneNumber" id="phone" class="w-full" pInputText type="text"
+                    phone-format>
+                @if (vendorForm!.controls['businessPhoneNumber'].invalid &&
+                (vendorForm!.controls['businessPhoneNumber'].dirty
+                ||
+                vendorForm!.controls['businessPhoneNumber'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['businessPhoneNumber'].errors?.['required']) {
+                    Business Phone Number is required.
+                    }
+                </small>
+                }
+            </div>
+
+            <div class="col-span-6">
+                <label for="country">Country <span class=" text-red-600">*</span> </label>
+                <p-select id="country" [options]="country()" optionValue="id" optionLabel="name"
+                    (onChange)="getStates($event.value)" placeholder="Select a Country" formControlName="country"
+                    class="w-full rounded-full md:w-56" />
+                @if (vendorForm!.controls['country'].invalid && (vendorForm!.controls['country'].dirty
+                ||
+                vendorForm!.controls['country'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['country'].errors?.['required']) {
+                    Full Name is required.
+                    }
+                </small>
+                }
+            </div>
+            <div class="col-span-6">
+                <label for="state">States <span class=" text-red-600">*</span> </label>
+                <p-select id="state" [options]="states()" optionValue="id" optionLabel="name" [filter]="true"
+                    filterBy="name" (onChange)="getlga($event.value)" placeholder="Select a Business Type"
+                    formControlName="state" class="w-full rounded-full md:w-56" />
+                @if (vendorForm!.controls['state'].invalid && (vendorForm!.controls['state'].dirty
+                ||
+                vendorForm!.controls['state'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['state'].errors?.['required']) {
+                    Full Name is required.
+                    }
+                </small>
+                }
+            </div>
+            <div class="col-span-6">
+                <label for="lga">LGA <span class=" text-red-600">*</span> </label>
+                <p-select id="lga" [options]="lgas()" optionValue="id" optionLabel="name" formControlName="lga"
+                    (onChange)="getCities($event.value)" placeholder="Select a Business Type"
+                    class="w-full rounded-full md:w-56" />
+                @if (vendorForm!.controls['lga'].invalid && (vendorForm!.controls['lga'].dirty
+                ||
+                vendorForm!.controls['lga'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['lga'].errors?.['required']) {
+                    Full Name is required.
+                    }
+                </small>
+                }
+            </div>
+            <div class="col-span-6">
+                <label for="city">City <span class=" text-red-600">*</span> </label>
+                <p-select id="city" [options]="cities()" optionValue="id" optionLabel="name" formControlName="city"
+                    placeholder="Select a Business Type" class="w-full rounded-full md:w-56" />
+                @if (vendorForm!.controls['city'].invalid && (vendorForm!.controls['city'].dirty
+                ||
+                vendorForm!.controls['city'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['city'].errors?.['required']) {
+                    City is required.
+                    }
+                </small>
+                }
+            </div>
+            <div class="col-span-12">
+                <label for="address">Business Address <span class=" text-red-600">*</span> </label>
+                <input id="address" pInputText placeholder="Select a Business Address" formControlName="address"
+                    class="w-full rounded-full md:w-56" />
+                @if (vendorForm!.controls['address'].invalid && (vendorForm!.controls['address'].dirty ||
+                vendorForm!.controls['address'].touched)) {
+                <small class="p-error text-red-600">
+                    @if (vendorForm!.controls['address'].errors?.['required']) {
+                    Business Address is required.
+                    }
+                </small>
+                }
+            </div>
+            <div class="col-span-3">
+                <span>Logo</span>
+                <app-file-upload [accept]="'image/*'" (fileChange)="onLogoUpload($event)"
+                    [isImage]="true"></app-file-upload>
+            </div>
+            <div class="col-span-3">
+                <span>Display Picture</span>
+                <app-file-upload [accept]="'image/*'" (fileChange)="onDisplayPictureUpload($event)"
+                    [isImage]="true"></app-file-upload>
+            </div>
+            <div class="col-span-3">
+                <span>CAC Certificate</span>
+                <app-file-upload (fileChange)="onCacCertUpload($event)"></app-file-upload>
+            </div>
+            <div class="col-span-3">
+                <span>FH Certificate</span>
+                <app-file-upload (fileChange)="onFHLicenseUpload($event)"></app-file-upload>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <span class="text-xl font-semibold">Owners Details</span>
+            <p-divider class="m-0 p-0"></p-divider>
+            <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-6">
+                    <label for="name">Full Name <span class=" text-red-600">*</span> </label>
+                    <input formControlName="ownerFullName" id="name" class="w-full" pInputText type="text">
+                    @if (vendorForm!.controls['ownerFullName'].invalid && (vendorForm!.controls['ownerFullName'].dirty
+                    ||
+                    vendorForm!.controls['ownerFullName'].touched)) {
+                    <small class="p-error text-red-600">
+                        @if (vendorForm!.controls['ownerFullName'].errors?.['required']) {
+                        Full Name is required.
+                        }
+                    </small>
+                    }
+                </div>
+                <div class="col-span-6">
+                    <label for="ownerPhoneNumber">Phone Number <span class=" text-red-600">*</span> </label>
+                    <input formControlName="ownerPhoneNumber" id="ownerPhoneNumber" class="w-full" pInputText
+                        phone-format type="text">
+                    @if (vendorForm!.controls['ownerPhoneNumber'].invalid &&
+                    (vendorForm!.controls['ownerPhoneNumber'].dirty ||
+                    vendorForm!.controls['ownerPhoneNumber'].touched)) {
+                    <small class="p-error text-red-600">
+                        @if (vendorForm!.controls['ownerPhoneNumber'].errors?.['required']) {
+                        Phone Number is required.
+                        }
+                    </small>
+                    }
+                </div>
+                <div class="col-span-6">
+                    <label for="userName">UserName <span class=" text-red-600">*</span> </label>
+                    <input formControlName="userName" id="userName" class="w-full" pInputText type="text">
+                    @if (vendorForm!.controls['userName'].invalid && (vendorForm!.controls['userName'].dirty ||
+                    vendorForm!.controls['userName'].touched)) {
+                    <small class="p-error text-red-600">
+                        @if (vendorForm!.controls['userName'].errors?.['required']) {
+                        UserName is required.
+                        }
+                    </small>
+                    }
+                </div>
+                <div class="col-span-6">
+                    <label for="email">Email Address <span class=" text-red-600">*</span> </label>
+                    <input formControlName="ownerEmail" id="email" class="w-full" pInputText type="text">
+                    @if (vendorForm!.controls['ownerEmail'].invalid && (vendorForm!.controls['ownerEmail'].dirty ||
+                    vendorForm!.controls['ownerEmail'].touched)) {
+                    <small class="p-error text-red-600">
+                        @if (vendorForm!.controls['ownerEmail'].errors?.['required']) {
+                        Email Address is required.
+                        } @else if (vendorForm!.controls['ownerEmail'].errors?.['strictEmail']) {
+                        Please enter a valid email address.
+                        }
+                    </small>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <ng-template #footer>
+        <button type="button" (click)=" closeVendorForm() "
+            class="bg-slate-300 font-semibold text-black rounded-2xl pt-2 pb-2 pr-6  pl-6">Cancel</button>
+        <button type="button" [disabled]="!vendorForm!.valid" rounded (click)="submit()"
+            class="rounded-2xl font-semibold text-black bg-p pt-2 pb-2 pr-6  pl-6">Create Vendor</button>
+
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog #content [closable]="false" [(visible)]="showVendorMenuForm" [modal]="true" [responsive]="true    "
+    [style]="{width: '550px', minWidth: '350px' }">
+<app-vendor-menu [vendorInfo]="selectedVendor()" (hideDialog)="showVendorMenuForm = false"></app-vendor-menu>
+    </p-dialog>
+
+

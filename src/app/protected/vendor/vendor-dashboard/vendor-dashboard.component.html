@@ -1,0 +1,74 @@
+<div class="mt-4">
+    <div class="  flex justify-between">
+        <div class="gap-x-2">
+            <div class="font-bold text-4xl pb-2">Dashboard Overview</div>
+
+            <div class="text-xl md:text-lg w-full  ">
+                <div class="text-3xl font-semibold"> Welcome back</div>
+                @if (currentVendor()) {
+                <span class="font-bold text-xl"> {{currentVendor().businessName}}</span>}
+
+                @if (hasDisplayPicture()) {
+                <div class=" flex flex-row justify-between items-center gap-x-4 h-28">
+                    <div class="text-xl font-semibold">You have not completed the your registration.</div>
+                    <p-button rounded="25" (click)="completeRegistration()">Continue Registration</p-button>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="flex gap-x-4">
+            <p-splitbutton rounded="25" class="rounded-md " label="Update Availabity" [model]="items"></p-splitbutton>
+            <p-button (click)="gotoMenuManager()" label="Add New Menu" rounded />
+        </div>
+    </div>
+
+    <div class="col-span-12 md:col-span-12 mt-5">
+        <bt-start></bt-start>
+    </div>
+
+    <div class="flex justify-between items-center mt-8">
+        <div class="font-bold text-2xl">Recent Order</div>
+        <div class="flex flex-row  text-lg justify-between text-center">
+            <app-date-filter class="rounded-md"></app-date-filter>
+            <div class="border bg-white shadow-md px-3 py-3 m-2"><i class="pi pi-filter mx-3"></i> Filter</div>
+        </div>
+    </div>
+    <!-- {{customerOrder() | json }} -->
+    <div class="my-6">
+        @if (customerOrder().length ) {
+        <p-table [value]="customerOrder()" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr class="bg-black">
+                    <th>Order Id</th>
+                    <th>Order Time</th>
+                    <th>Customer Name</th>
+                    <th>Order</th>
+                    <th>Order</th>
+                    <th>Order Status</th>
+                    <th>Activites</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-order>
+                <tr>
+                    <td>{{order.orderCode}}</td>
+                    <td>{{order.createdOn | date:'shortTime'}}</td>
+                    <td>{{order.customer}}</td>
+                    <td>{{order.items[0].quantity}} {{order.items[0].productName ?? 'food item' }}</td>
+                    <td>{{order.totalAmount}}</td>
+                    <td>{{getOrderStatus(order.status)}}</td>
+                    <td> View </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        }
+        @else {
+        <div class="flex  mt-8 border shadow rounded-lg bg-[#f3e7e4] justify-center items-center">
+            <div class="m-4 text-lg font-semibold ">
+                No Order Available
+            </div>
+        </div>
+        }
+    </div>
+
+</div>

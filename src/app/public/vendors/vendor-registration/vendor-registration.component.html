@@ -1,0 +1,60 @@
+<app-registration-banner [showLink]="true" class=""></app-registration-banner>
+<div class=""></div>
+<div class=" pt-12 container pb-6 ">
+
+    <div class="  flex flex-col wrapper gap-4 ">
+        <div class="  register-header ">
+            <div class="text-2xl font-bold justify-start">Ready to Grow Your Food Business</div>
+            <div class="subtext">Join thousands of vendors delivering amazing meals through our platform.</div>
+        </div>
+        <div class="registration-form gat-top-2" [formGroup]="newVendorForm">
+
+            <div class="flex flex-col  gap-bottom ">
+                <label for="fullName">Owner’s Full Name</label>
+                <input pInputText formControlName="fullName" id="fullName" placeholder="Enter fullName" />
+                @if (false) {
+                <small id="username-help">Fullname is required</small>
+                }
+            </div>
+            <div class="flex flex-col  gap-bottom ">
+                <label for="emailAddress">Email Address </label>
+                <input type="email" class="ng-invalid ng-dirty" pInputText formControlName="emailAddress"
+                    id="emailAddress" aria-describedby="username-help" />
+                @if (false) {
+                <small id="emailAddress-help">Enter your username to reset your password.</small>
+                }
+            </div>
+            <div class="flex flex-col  gap-bottom ">
+                <label for="phoneNumber">Phone Number</label>
+                <input pInputText formControlName="phoneNumber" id="phoneNumber" aria-describedby="phoneNumber-help" />
+                @if (false) {
+                <small id="phoneNumber-help">Enter your username to reset your password.</small>
+                }
+            </div>
+            <div class="flex flex-col  gap-bottom ">
+                <label for="userName">User Name</label>
+                <input pInputText formControlName="userName" id="userName" aria-describedby="userName-help" />
+                @if (false) {
+                <small id="userName-help">Enter your username to reset your password.</small>
+                }
+            </div>
+            <div class="flex flex-col gap-bottom">
+                <label for="password">Create Password</label>
+                <input pInputText type="password" formControlName="password" id="password"
+                    aria-describedby="password-help" />
+                @if (false) {
+                <small id="password-help">Enter your username to reset your password.</small>
+                }
+            </div>
+
+            <button (click)="signUp()" [rounded]="true" pButton class="wid-full gap-top" type="button"> Get Started
+                as
+                Vendor</button>
+        </div>
+
+    </div>
+
+
+
+
+</div>

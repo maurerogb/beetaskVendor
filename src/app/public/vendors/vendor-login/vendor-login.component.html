@@ -1,0 +1,52 @@
+<app-registration-banner [showLink]="false" class=" z-10 fixed "></app-registration-banner>
+
+<div class="  container  ">
+    <div class=" flex flex-col wrapper gap-4 ">
+        <div class="gap-top-2 gap-bottom">
+            <div class=" register-header ">
+                <div class="m-0  font-semibold text-4xl font-bold justify-start">Welcome back!</div>
+                <!-- <div class="subtext">Join thousands of vendors delivering amazing meals through our platform.</div> -->
+            </div>
+            <div class="content-form" [formGroup]="signinForm">
+
+                <div class="flex flex-col mb-3 ">
+                    <div for="username" class="font-medium text-surface-900 dark:text-surface-0 mb-2 block">
+                        Usename
+                    </div>
+                    <input id="username" pSize="small" formControlName="userName" type="text" pInputText fluid />
+                </div>
+                <div class="flex flex-col mb-3  gap-bottom ">
+                    <label for="password" class="font-medium text-surface-900 dark:text-surface-0 mb-2 block">
+                        password
+                    </label>
+                    <input id="password" pSize="small" formControlName="password" type="password" pInputText fluid />
+                </div>
+
+                    <button  rounded="true " class="wid-full gap-top"  pButton (click)="onSubmit()"  type="button">Login</button>
+
+                <div class="flex justify-between font-bold mt-3 gap-top">
+                    <span> <a routerLink="/vendor/onboarding/forgot-password">Forgot Passord</a> </span>
+                    <span> <a routerLink="/vendor/onboarding/registration">Register</a> </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+
+<div class=" container ">
+    <div class="flex flex-1 flex-col    items-center justify-center">
+        <div class=" sm:w-[30rem] card">
+            <div class="flex flex-col">
+
+                <div class="mb-2 ">
+                    <div class="m-0  font-semibold text-4xl">Welcome back!</div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div> -->

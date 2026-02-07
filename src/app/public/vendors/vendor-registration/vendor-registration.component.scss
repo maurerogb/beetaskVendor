@@ -1,0 +1,75 @@
+.password-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.page-content {
+    height: 100vh;
+}
+
+.password-input {
+    padding-right: 30px;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.container {
+    height: 100vh;
+    // position: relative; /* makes this the positioning context */
+    // width: 300px;
+    // height: 200px;
+    // background-color: lightblue;
+}
+
+.overlay {
+    position: absolute; /* positions relative to .container */
+    top: 0;
+    left: 0; /* semi-transparent */
+    color: white;
+    display: flex;
+    width: 250px;
+    height: 250px;
+    align-items: center;
+    justify-content: end;
+    font-size: 20px;
+    float: right;
+}
+
+.register-header {
+    margin-top: 19px;
+    display: flex;
+    width: 360px;
+    flex-direction: column;
+
+    .header {
+        font-size: 1.5rem /* 24px */;
+        line-height: 2rem;
+        font-weight: 700;
+        justify-content: flex-start;
+        .subtext {
+            margin-top: 5px;
+            font-weight: 500;
+            text-align: start;
+        }
+    }
+}
+
+ .registration-form {
+        width: 351px;
+    }
+.gap-top{
+margin-top: 12px;
+}
+.gap-bottom{
+margin-bottom: 12px;
+}
+
+.wid-full{
+    width: 100%;
+}
+

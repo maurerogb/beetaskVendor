@@ -1,0 +1,37 @@
+<div class="protected-page-bg min-h-screen pb-10">
+    <div class="m-6  p-4">
+        <div class="  flex justify-between">
+            <div class="gap-x-2">
+                <div class="font-bold text-2xl pb-2">Settings</div>
+
+                <div class="text-xl md:text-lg ">Customise Your business operations, availability, notifications, and
+                    customer experience.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" grid grid-cols-12 gap-6">
+
+        <!-- Left Menu -->
+        <div class=" mt-3 col-span-3 setting-menu-bg p-4 rounded-md border border-gray-200 space-y-3">
+
+            @for (item of menuItems; track $index) {
+
+            <a [routerLink]="['/vendorside/settings', item.key]" routerLinkActive="active-link"
+                class="block px-3 py-2 rounded-lg cursor-pointer transition"
+                [ngClass]="{'text-gray-700 hover:bg-white': true}">
+                {{ item.label }}
+            </a>
+            }
+
+        </div>
+
+        <!-- Right Area -->
+        <div class=" mt-3  col-span-9 ">
+
+            <router-outlet></router-outlet>
+            <!-- PERSONAL INFO -->
+
+        </div>
+    </div>
+</div>

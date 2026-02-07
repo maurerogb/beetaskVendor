@@ -1,0 +1,791 @@
+<div class="h-screen m-4">
+    <!-- <bt-rider-skech></bt-rider-skech> -->
+    @if (riderData()) {
+    <div>
+        <div class="flex justify-between items-center">
+            <div class="flex flex-col">
+                <span class="text-[#1F0702] text-2xl font-bold">Rider Management </span>
+                <span class="text-lg">Keep track of rider and their security ratings.</span>
+            </div>
+            <div>
+                <button (click)="showForm()" class=" rounded-2xl bg-p pt-2 pb-2 pr-4  pl-4" type="submit">Add
+                    Rider</button>
+            </div>
+        </div>
+
+        <div class=" mt-6  p-6 h-screen bg-white rounded-lg shadow-md ">
+            <div class="flex gap-2 items-center">
+                <span class=" font-bold text-[#1D1B1C]">Riders List</span>
+                <small class="p-1 font-bold bg-[#FEF0D8] rounded-full">{{riderData().length.toString()}} new
+                    riders</small>
+
+            </div>
+            <div class="flex justify-between mt-3">
+
+                <div class="w-2/4">
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search" />
+                        <input class="w-full" type="text" pInputText placeholder="Search" />
+                    </p-iconfield>
+                </div>
+                <div class="flex flex-row gap-2">
+                    <div
+                        class=" flex items-center gap-x-2 border bg-white rounded-lg shadow-md pr-3 pl-3 pt-1 pb-1 cursor-pointer">
+                        <bt-rider-skech></bt-rider-skech>
+                        Locate Rider
+                    </div>
+                    <app-date-filter></app-date-filter>
+                    <app-filter></app-filter>
+                </div>
+            </div>
+            <div class="mt-6">
+                <p-table [value]="riderData()" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template #header>
+                        <tr class="bg-black">
+                            <th>Rider</th>
+                            <th>Region</th>
+                            <th>Reg Date</th>
+                            <th>Del-Orders</th>
+                            <th>Status</th>
+                            <th>Rating</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-rider>
+                        <tr>
+                            <td> <span class="flex items-center">
+
+                                    <img [src]="rider.riderUrl" class="rounded-full mr-2" width="40" height="40" alt="">
+
+                                    <span class="flex flex-col">
+                                        <label for="">{{rider.fullName}}</label>
+                                        <small>{{rider.emailAddress}}</small>
+                                    </span>
+                                </span> </td>
+                            <td>{{rider.city}}, {{rider.state}}</td>
+                            <td>{{rider.createdOn | date}}</td>
+                            <td class=" items-center text-center"> 0 </td>
+                            <td> <small>
+                                    {{getStatus(rider.approvalStatus)}}
+                                </small>
+                            </td>
+                            <td class=" items-center">
+                                <span class="flex items-center gap-2">
+                                    <span>
+                                        0 <i class="pi pi-star-fill" style="color: orange;"></i>
+                                    </span>
+                                    <small> (0 reviews) </small>
+
+                                </span>
+                            </td>
+
+
+                            <td> <a class="font-bold text-p-color" (click)="openDetails(rider)"
+                                    href="javascript:void(0)">View</a> </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    } @else {
+    <div class=" flex mt-20  justify-center items-center ">
+        <div class="w-1/2">
+            <div class="  card flex flex-col gap-4  items-center justify-center">
+                <app-rider class="mt-6"></app-rider>
+                <div class=" flex flex-col w-3/4 items-center text-center align-middle">
+                    <span class="text-2xl mb-3 text-[#1F0702] font-bold">Rider Management</span>
+                    <span>You currently have no Rider registered on the system. add new rider.</span>
+                    <button class="bg-p rounded-2xl pt-2 pb-2 pr-6 pl-6 m-3 " type="submit"> Add Vendors</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    }
+</div>
+
+
+<p-dialog #content [(visible)]="showRiderForm"  [closable]="false" [style]="{width: '450px' }"
+    [modal]="true" class="p-fluid">
+    <ng-template #header>
+        <div class="flex flex-col w-full gap-4">
+            <div class="flex justify-between w-full">
+                <div class="flex flex-col">
+                    <div class="font-semibold text-xl">Add Rider</div>
+                    <span class="text-sm">Fill the form below to add a new rider to the platform</span>
+                </div>
+                <app-cancel class="cursor-pointer" (click)="closeFormDetails()"></app-cancel>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="content" class="bg-p">
+
+        <div [formGroup]="riderForm!">
+
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col">
+                    <label for="fullName" class="font-medium text-surface-900 dark:text-surface-0  block">
+                        Full Name
+                    </label>
+                    <input id="fullName" pSize="small" formControlName="fullName" type="text" pInputText fluid />
+                    @if (riderForm!.controls['fullName']!.invalid && riderForm!.controls['fullName']!.touched)
+                    {
+                    <small class="p-error ml-2 text-red-600">Full Name is required.</small>
+                    }
+                </div>
+                <div class="flex flex-col">
+                    <label for="phoneNumber" class="font-medium text-surface-900 dark:text-surface-0  block">
+                        Phone Number
+                    </label>
+                    <input id="phoneNumber" phone-format inputmode="numeric" pSize="small" formControlName="phoneNumber"
+                        type="tel" pInputText fluid />
+                    @if (riderForm!.controls['phoneNumber']!.invalid && riderForm!.controls['phoneNumber']!.touched)
+                    {
+                    <small class="p-error ml-2 text-red-600">Phone Number is required.</small>
+                    }
+                </div>
+                <div class="flex flex-col">
+                    <label for="email" class="font-medium text-surface-900 dark:text-surface-0  block">
+                        Email Address
+                    </label>
+                    <input id="email" pSize="small" formControlName="email" type="email" pInputText fluid />
+                    @if (riderForm!.controls['email']!.invalid && (riderForm!.controls['email']!.dirty
+                    ||
+                    riderForm!.controls['email']!.touched)) {
+                    <small class="p-error text-red-600">
+                        @if (riderForm!.controls['email']!.errors!['required']) {
+                        Email Address is required.
+                        } @else if (riderForm!.controls['email']!.errors!['email']) {
+                        Please enter a valid email address.
+                        }
+                    </small>
+                    }
+                </div>
+                <div class="flex flex-col">
+                    <label for="userName" class="font-medium text-surface-900 dark:text-surface-0  block">
+                        User Name
+                    </label>
+                    <input id="userName" pSize="small" formControlName="userName" type="text" pInputText fluid />
+                    @if (riderForm!.controls['userName']!.invalid && riderForm!.controls['userName']!.touched)
+                    {
+                    <small class="p-error ml-2 text-red-600">User Name is required.</small>
+                    }
+                </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class=" col-span-6 flex flex-col">
+                        <label for="region" class="font-medium text-surface-900 dark:text-surface-0 block">
+                            Region/State
+                        </label>
+                        <p-select [showClear]="true" formControlName="region" (onChange)="getlga($event.value)"
+                            optionValue="id" [options]="states()" optionLabel="name" placeholder="Select a State"
+                            class="w-full md:w-56" />
+                        @if (riderForm!.controls['region']!.invalid && riderForm!.controls['region']!.touched) {
+                        <small class="p-error ml-2 text-red-600">Region/State is required.</small>
+                        }
+                    </div>
+                    <div class=" col-span-6 flex flex-col">
+                        <label for="lga" class="font-medium text-surface-900 dark:text-surface-0  block">
+                            Local Government Area
+                        </label>
+                        <p-select [showClear]="true" formControlName="lga" optionValue="id" [options]="lgas()"
+                            optionLabel="name" (onChange)="getCities($event.value)" placeholder="Select a LGA"
+                            class="w-full md:w-56" />
+                        @if (riderForm!.controls['lga']!.invalid && riderForm!.controls['lga']!.touched) {
+                        <small class="p-error ml-2 text-red-600">Local Government Area is required.</small>
+                        }
+                    </div>
+
+                    <div class=" col-span-12 flex flex-col">
+                        <label for="city" class="font-medium text-surface-900 dark:text-surface-0  block">
+                            City
+                        </label>
+                        <p-select [showClear]="true" formControlName="city" optionValue="id" [options]="cities()"
+                            optionLabel="name" placeholder="Select a City" class=" rounded-full w-full md:w-56" />
+                        @if (riderForm!.controls['city']!.invalid && riderForm!.controls['city']!.touched) {
+                        <small class="p-error ml-2 text-red-600">City is required.</small>
+                        }
+                    </div>
+
+                    <div class=" col-span-12 flex flex-col">
+                        <label for="address" class="font-medium text-surface-900 dark:text-surface-0  block">
+                            Address
+                        </label>
+                        <input id="address" pSize="small" formControlName="address" type="text" pInputText fluid />
+                        @if (riderForm!.controls['address']!.invalid && riderForm!.controls['address']!.touched)
+                        {
+                        <small class="p-error ml-2 text-red-600">Address is required.</small>
+                        }
+                    </div>
+
+                    <div class=" col-span-6 flex flex-col">
+                        <label class="font-medium text-surface-900 dark:text-surface-0  block">
+                            Profile Picture
+                        </label>
+                        <app-file-upload [accept]="'image/*'" class="w-full" (fileChange)="onRiderUpload($event)">
+                        </app-file-upload>
+                    </div>
+
+                    <div class=" col-span-12 flex flex-col">
+                        <label class="font-medium text-surface-900 dark:text-surface-0  block">
+                            Documents Types
+                        </label>
+                        <p-select [showClear]="true" formControlName="documentType" optionValue="id"
+                            [options]="document()" optionLabel="name" placeholder="Select Document Type"
+                            class=" rounded-full w-full md:w-56" />
+                        @if (riderForm!.controls['documentType']!.invalid &&
+                        riderForm!.controls['documentType']!.touched){
+                        <small class="p-error ml-2 text-red-600">Document Type is required.</small>
+                        }
+                    </div>
+
+
+                    <div class=" col-span-12 flex flex-col">
+                        <label class="font-medium text-surface-900 dark:text-surface-0  block">
+                            Documents Number
+                        </label>
+                        <input type="text" digitLimit [maxDigits]="12" inputmode="numeric" id="email" pSize="small"
+                            formControlName="documentNumber" type="email" pInputText fluid />
+                        @if (riderForm!.controls['documentNumber']!.invalid &&
+                        riderForm!.controls['documentNumber']!.touched)
+                        {
+                        <small class="p-error ml-2 text-red-600">Document Number is required.</small>
+                        }
+                    </div>
+
+                    <div class=" col-span-12 flex flex-col">
+                        <label class="font-medium text-surface-900 dark:text-surface-0  block">
+                            Upload Documents
+                        </label>
+                        <app-file-upload [accept]="'image/*'" class="w-full" (fileChange)="onDocumentUpload($event)">
+                        </app-file-upload>
+                    </div>
+                    <div class="mt-3 col-span-12 gap-4">
+                        <span class="text-xl font-bold">Bank Details</span>
+                        <p-divider></p-divider>
+                        <div class=" col-span-12 flex flex-col">
+                            <label for="bankName" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Bank Name
+                            </label>
+                            <input id="bankName" pSize="small" formControlName="bankName" type="text" pInputText
+                                fluid />
+                            @if (riderForm!.controls['bankName'].invalid && riderForm!.controls['bankName'].touched) {
+                            <small class="p-error ml-2 text-red-600">Bank Name is required.</small>
+                            }
+                        </div>
+
+                        <div class=" col-span-12 flex flex-col">
+                            <label for="bankNo" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Account Number
+                            </label>
+                            <input pSize="small" type="text" digitLimit [maxDigits]="10" inputmode="numeric" id="bankNo"
+                                formControlName="accountNumber" pInputText />
+                            @if (riderForm!.controls['accountNumber'].invalid &&
+                            riderForm!.controls['accountNumber'].touched) {
+                            <small class="p-error ml-2 text-red-600">Account Number is required.</small>
+                            }
+                        </div>
+
+                        <div class=" col-span-12 flex flex-col">
+                            <label for="accountName" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Account Name
+                            </label>
+                            <input id="accountName" pSize="small" formControlName="accountName" type="text" pInputText
+                                fluid />
+                            @if (riderForm!.controls['accountName'].invalid &&
+                            riderForm!.controls['accountName'].touched) {
+                            <small class="p-error ml-2 text-red-600">Account Name is required.</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="mt-3 col-span-12 gap-4">
+                        <span class="text-xl font-bold">Vehicle Details</span>
+                        <p-divider></p-divider>
+                        <div class=" col-span-12 flex flex-col">
+                            <label for="vehicleType" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Vehicle Type
+                            </label>
+                            <input id="vehicleType" pSize="small" formControlName="vehicleType" type="text" pInputText
+                                fluid />
+                            @if(riderForm!.controls['vehicleType'].invalid &&
+                            riderForm!.controls['vehicleType'].touched) {
+                            <small class="p-error ml-2 text-red-600">Vehicle Type is required.</small>
+                            }
+                        </div>
+                        <div class=" col-span-12 flex flex-col">
+                            <label for="vehicleName" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Vehicle Name
+                            </label>
+                            <input id="vehicleName" pSize="small" formControlName="vehicleName" type="text" pInputText
+                                fluid />
+                            @if (riderForm!.controls['vehicleName'].invalid &&
+                            riderForm!.controls['vehicleName'].touched) {
+                            <small class="p-error ml-2 text-red-600">Vehicle Name is required.</small>
+                            }
+                        </div>
+                        <div class=" col-span-12 flex flex-col">
+                            <label for="plateNumber" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Plate Number
+                            </label>
+                            <input id="plateNumber" pSize="small" formControlName="plateNumber" type="text" pInputText
+                                fluid />
+                            @if (riderForm!.controls['plateNumber'].invalid &&
+                            riderForm!.controls['plateNumber'].touched) {
+                            <small class="p-error ml-2 text-red-600">Plate Number is required.</small>
+                            }
+                        </div>
+
+                        <div class=" col-span-6 flex flex-col">
+                            <label class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Bike Picture
+                            </label>
+                            <app-file-upload [accept]="'image/*'" class="w-full" (fileChange)="onBikeUpload($event)">
+                            </app-file-upload>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 col-span-12 font-bold text-lg">
+                        <span class="col-span-12">Other Documents</span>
+                        <p-divider></p-divider>
+                        <div class=" col-span-6 flex flex-col">
+                            <label for="licenseDoc" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                License Document
+                            </label>
+                            <app-file-upload id="licenseDoc" [accept]="'image/*'" class="w-full"
+                                (fileChange)="onLicenseUpload($event)">
+                            </app-file-upload>
+                        </div>
+
+                        <div class=" col-span-6 flex flex-col">
+                            <label for="insureance" class="font-medium text-surface-900 dark:text-surface-0  block">
+                                Insureance Document
+                            </label>
+                            <app-file-upload id="insureance" [accept]="'image/*'" class="w-full"
+                                (fileChange)="onInsureanceUpload($event)">
+                            </app-file-upload>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="flex w-full gap-4">
+            <!-- <button class="p-button-secondary" (click)="closeFormDetails()" type="button">Cancel</button> -->
+            <button [disabled]="riderForm!.invalid || !documentCert" rounded="true "
+                class="wid-full bg-p p-3 rounded-2xl" pButton (click)="submitRiderForm()" type="button">Add
+                Rider</button>
+        </div>
+
+    </ng-template>
+</p-dialog>
+
+<p-dialog #content [(visible)]="showDialog" [closable]="false" [style]="{width: '750px' }"
+    [modal]="true" class="p-fluid">
+    @let rider = selectedRider();
+    <ng-template #header>
+        <div class="flex flex-col w-full gap-4">
+
+
+            <div class="flex justify-between w-full">
+                <div></div>
+                <app-cancel class="cursor-pointer" (click)="closeDetails()"></app-cancel>
+            </div>
+            <div class="flex justify-between w-full items-center ">
+
+                <div class="flex flex-row space-x-3 items-center ">
+                    <p-overlaybadge class="" [severity]="rider.isActive ? 'success' : 'danger'" value=" ">
+                        <img [src]="rider?.riderUrl" class="rounded-full" width="100" height="100" alt="">
+                    </p-overlaybadge>
+
+                    <div class="flex flex-col gap-1">
+                        <div class="flex gap-2">
+                            <span class=" text-2xl">{{rider?.fullName}}</span>
+                            <p-tag [rounded]="true" [severity]="getSeverity(rider?.approvalStatus)"
+                                [value]="getStatus(rider?.approvalStatus)"></p-tag>
+                        </div>
+                        <span class="font-semibold text-[#5B5858]">Rider</span>
+                        <span class=" text-[#5B5858]">Joined Since: {{rider?.createdOn |date}}</span>
+                    </div>
+                </div>
+
+                @if (rider!.approvalStatus == 0) {
+                <div class=" gap-3 flex items-center">
+                    <button pButton pRipple label="Accept" rounded (click)="acceptRequest(rider!)" icon="pi pi-check"
+                        class="header-button-padding"></button>
+                    <button pButton pRipple label="Reject" rounded icon="pi pi-times" (click)="rejectRider(rider!)"
+                        class="header-button-padding p-button-cancel"></button>
+                    <!-- <i class="pi pi-ellipsis-v"></i> -->
+                </div>
+                } @else {
+                <i class="pi pi-ellipsis-v cursor-pointer"></i>
+
+                }
+
+            </div>
+        </div>
+        <!-- <p-popover #op>
+            <div class="flex flex-col gap-4 w-[25rem]">
+                <div>
+
+                    <ul class="list-none p-0 m-0 flex flex-col gap-4">
+
+                        <li (click)="flagRider(rider)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <bt-flag-icon> </bt-flag-icon>
+                                <span>Flag</span>
+                            </div>
+                        </li>
+                        <li (click)="suspendRider(rider)" class="flex items-center cursor-pointer gap-2">
+                            <div class="flex items-center font-semibold gap-2 text-muted-color ml-auto text-sm">
+                                <bt-trash-icon> </bt-trash-icon>
+                                <span>Suspend</span>
+                            </div>
+                        </li>
+                        <li (click)="deleteRider(rider)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <bt-trash-icon> </bt-trash-icon>
+                                <span>Delete Account</span>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </p-popover> -->
+    </ng-template>
+    <ng-template pTemplate="content" class="bg-p">
+        <div>
+            <p-tabs value="0">
+                <p-tablist>
+                    <p-tab value="0">Business Information</p-tab>
+                    <p-tab value="1">Complaint</p-tab>
+                    <p-tab value="2">Order Summary </p-tab>
+                    <p-tab value="3">Payouts</p-tab>
+                </p-tablist>
+                <p-tabpanels>
+                    <p-tabpanel value="0">
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+                            <div class="p-6">
+                                @let rider = selectedRider();
+                                <div class="m-0">
+                                    <span class="ml-0 text-lg font-bold">Contact Information</span>
+                                    <div class="grid grid-cols-12 mt-2 gap-3 ">
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Rider ID</span>
+                                            <span
+                                                class="text-lg font-medium">{{rider!.uuid.substring(rider!.uuid.length-
+                                                10)}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Full Name</span>
+                                            <span class="text-lg font-medium">{{rider!.fullName}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Phone Number</span>
+                                            <span class="text-lg font-medium">{{rider!.phoneNumber | phoneNg}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Email Address</span>
+                                            <span class="text-lg font-medium">{{rider!.emailAddress}}</span>
+                                        </div>
+                                        <div class=" col-span-8 flex flex-col">
+                                            <span class="text-lg">Address</span>
+                                            <span class="text-lg font-medium">{{rider!.riderAddress +' '+ rider!.city +'
+                                                '+ rider!.lga +' '+ rider!.state}}</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="mt-4">
+                                    <span class="ml-0 text-lg font-bold">Bike Information</span>
+                                    <div class="grid grid-cols-12 mt-2 ">
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Brand</span>
+                                            <span class="text-lg font-semibold">{{rider!.vehicleName}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Type</span>
+                                            <span class="text-lg font-semibold">{{rider?.vehicleType}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Plate Number</span>
+                                            <span class="text-lg font-semibold">{{rider?.plateNumber}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white border rounded-lg m-3 p-3">
+                                <div class="flex flex-col">
+                                    <span class="text-xl   font-bold">Profile Verification</span>
+                                    <span class="text-sm  mt-4  ">Personal Identification Documents</span>
+
+                                </div>
+
+                                <div class="mt-1">
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-3 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class="text-sm font-semibold">Government-issued ID</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-lg font-semibold"> <a target="_blank"
+                                                    [href]="rider.documentLink">view</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-3 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class="text-sm font-semibold">Rider’s License</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-lg font-semibold"> @if(rider.licenseUrl)
+                                                {
+                                                <a target="_blank" [href]="rider.licenseUrl">view</a>
+                                                }
+                                                @else {
+                                                <span class="text-sm font-semibold">No Document</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-3 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class=" font-semibold">Rider Insurance</span>
+                                        </div>
+                                        <div>
+                                            <span class=" font-semibold"> @if(rider.insureanceUrl)
+                                                {
+                                                <a target="_blank" [href]="rider.insureanceUrl">view</a>
+                                                }
+                                                @else {
+                                                <span class="text-sm font-semibold">No Document</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-3 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class=" font-semibold">Bike Picture</span>
+                                        </div>
+                                        <div>
+                                            <span class=" font-semibold"> @if(rider.vehicleUrl)
+                                                {
+                                                <a target="_blank" [href]="rider.vehicleUrl" download="">view</a>
+                                                <!-- <a [href]="rider.vehicleUrl"   target="_blank">Download</a> -->
+                                                }
+                                                @else {
+                                                <span class="text-sm font-semibold">No Document</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </p-scrollpanel>
+
+                    </p-tabpanel>
+
+                    <p-tabpanel value="1">
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+
+                            <div class="flex m-0 p-3 flex-col w-full h-auto bg-[#FFF1E7] rounded-lg ">
+                                <span class="font-bold text-lg">Performance Metrics</span>
+                                <div class="grid grid-cols-12 mt-3">
+                                    <div class="col-span-3 flex flex-col">
+                                        <span>Completed Orders</span>
+                                        <span class="font-bold text-lg">400</span>
+                                    </div>
+                                    <div class="col-span-3 flex flex-col">
+                                        <span>Average Delivery Time</span>
+                                        <span class="font-bold text-lg">20 min</span>
+                                    </div>
+                                    <div class="col-span-3 flex flex-col">
+                                        <span>Ratings</span>
+                                        <span class="font-bold text-lg items-center">
+                                            <span>4.5 </span>
+                                            <i class="pi pi-star-fill m-2" style="color: orange;"></i>
+                                            <span class="text-sm font-normal">(30 reviews)</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-span-3 flex flex-col">
+                                        <span>Complaint Count</span>
+                                        <span class="font-bold text-lg">40</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white border rounded-lg mt-3 p-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg ml-0   font-semibold">Complaint and Dispute List</span>
+                                    <app-filter-sort></app-filter-sort>
+                                </div>
+
+                                <div class="mt-2">
+                                    <ul class="relative flex gap-8 border-b border-gray-200 text-sm font-medium"
+                                        role="tablist">
+                                        @for (status of statuses; track status; let i = $index) {
+                                        <li role="tab" tabindex="0" (click)="select(i)" (keydown.enter)="select(i)"
+                                            (keydown.space)="select(i)"
+                                            class="relative cursor-pointer px-3 pb-3 outline-none transition-colors focus-visible:text-red-600 "
+                                            [class.text-red-600]="activeIndex() === i">
+                                            {{ status }}
+                                            <!-- underline -->
+                                            <span
+                                                class="absolute left-0 -bottom-[1px] h-[2px] w-full bg-red-600 transform origin-left transition-transform duration-300 ease-out "
+                                                [class.scale-x-100]="activeIndex() === i"
+                                                [class.scale-x-0]="activeIndex() !== i"></span>
+                                        </li>
+                                        }
+                                    </ul>
+                                    <div class="mt-3">
+                                        <p-table [tableStyle]="{ 'min-width': '43rem' }">
+                                            <ng-template #header>
+                                                <tr class="bg-black items-center">
+                                                    <th>Complaint ID</th>
+                                                    <th>Category</th>
+                                                    <th>Order ID</th>
+                                                    <th>Raised by</th>
+                                                    <th>Date and Time</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #body let-product>
+
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </div>
+                            </div>
+                        </p-scrollpanel>
+                    </p-tabpanel>
+
+                    <p-tabpanel value="2">
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+
+                            <div class="bg-white border rounded-lg mt-6 p-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg ml-0   font-semibold">Order Summary</span>
+                                    <app-filter-sort></app-filter-sort>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="mt-3">
+                                        <p-table [tableStyle]="{ 'min-width': '40rem' }">
+                                            <ng-template #header>
+                                                <tr class="bg-black items-center">
+                                                    <th>Order ID</th>
+                                                    <th>Date</th>
+                                                    <th>Pickup</th>
+                                                    <th>Delivered</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #body let-product>
+
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </p-scrollpanel>
+                    </p-tabpanel>
+
+                    <p-tabpanel value="3">
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+
+                            <div class="grid grid-cols-12 gap-2">
+                                <span class="mt-2 col-span-12  font-semibold text-lg w-full">Payment Information</span>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Total Earnings</span>
+                                    <span class="font-semibold text-lg">N420,040</span>
+                                </div>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Withdrawn Amount</span>
+                                    <span class="font-semibold text-lg">N420,040</span>
+                                </div>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Next Payment</span>
+                                    <span class="font-semibold text-lg">{{ nextDate() | ordinalDate }}</span>
+                                </div>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Commission(%) </span>
+                                    <span class="font-semibold text-lg">80%</span>
+                                </div>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Payment Type</span>
+                                    <span class="font-semibold text-lg">Weekly</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-12 gap-2">
+                                <span class="mt-2 col-span-12  font-semibold text-lg w-full">Bank Information</span>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Bank Name</span>
+                                    <span class="font-semibold text-lg">{{this.selectedRider().bankName}}</span>
+                                </div>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Account Number</span>
+                                    <span class="font-semibold text-lg">{{this.selectedRider().accountNumber}}</span>
+                                </div>
+                                <div class="col-span-4 flex flex-col">
+                                    <span>Account Name</span>
+                                    <span class="font-semibold text-lg">{{ this.selectedRider().accountName }}</span>
+                                </div>
+                            </div>
+                            <div class="bg-white border rounded-lg mt-6 p-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg ml-0   font-semibold">Payouts</span>
+                                    <app-filter-sort [hideFilter]="false"></app-filter-sort>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="mt-3">
+                                        <p-table [tableStyle]="{ 'min-width': '40rem' }">
+                                            <ng-template #header>
+                                                <tr class="bg-black items-center">
+                                                    <th>Payout Date</th>
+                                                    <th>Earnings</th>
+                                                    <th>Commission Paid</th>
+                                                    <th>Platform Commission </th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #body let-product>
+
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </p-scrollpanel>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+        </div>
+    </ng-template>
+
+
+</p-dialog>

@@ -1,0 +1,47 @@
+<!-- Backdrop for mobile -->
+
+
+<!-- Drawer / Sidebar -->
+<div class="flex h-screen flex-col bg-p p-4 text-sky-50">
+    <!-- Logo -->
+    <div class="px-6 mb-8 text-2xl font-bold text-[#FFB84D] select-none">
+        <app-logo></app-logo>
+    </div>
+
+    <!-- Menu -->
+    <nav class=" space-y-1 px-3  ">
+        <ul>
+             <li class="p-4  my-4 active-menu-item rounded-lg ">
+                <a [routerLink]="'/dashboard'" routerLinkActive="active-menu-item !text-white shadow-sm"
+                    [routerLinkActiveOptions]="{ exact: true }" class=" " (click)="ui.closeSidebar()">
+                    <span class="text-lg transition-transform duration-200 group-hover:rotate-3">
+
+
+                    </span>
+                    <span class="font-medium">
+                        <i></i>
+                        Dashboard</span>
+                    <!-- Active pill indicator -->
+                    <span routerLinkActive="opacity-100"
+                        class="ml-auto h-2 w-2 rounded-full bg-white/80 opacity-0 transition-opacity duration-200"></span>
+                </a>
+            </li>
+            @for (item of menu; track $index) {
+            <li class="  rounded-lg  p-4  my-4  ">
+                <a [routerLink]="item.path" routerLinkActive=" !active-menu-item !text-white shadow-sm"
+                    [routerLinkActiveOptions]="{ exact: false }" class=" " (click)="ui.closeSidebar()">
+                    <span class="text-lg transition-transform duration-200 group-hover:rotate-3">{{ item.icon }}</span>
+                    <span class="font-medium">{{ item.label }}</span>
+                    <!-- Active pill indicator -->
+                    <span routerLinkActive="opacity-100"
+                        class="ml-auto h-2 w-2 rounded-full bg-white/80 opacity-0 transition-opacity duration-200"></span>
+                </a>
+            </li>
+        }
+        </ul>
+
+
+
+
+    </nav>
+</div>

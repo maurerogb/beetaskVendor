@@ -1,0 +1,78 @@
+<div class="m-6 p-4">
+    <div class=" flex justify-between">
+        <div class="gap-x-2">
+            <div class="font-bold text-2xl pb-2">Earnings</div>
+
+            <div class="text-xl md:text-lg ">All payout will be made every week on Friday’s
+                items.</div>
+        </div>
+
+        <div class="flex gap-x-4">
+            <p-splitbutton rounded="25" class="rounded-md " severity="secondary"
+                label="This Week's Payout: (₦45,000)"></p-splitbutton>
+
+            <p-button label="Payout Transactions" rounded />
+        </div>
+    </div>
+
+    <!-- <div class="flex justify-between  mt-6">
+        <div class="gap-x-2">
+        </div>
+
+         <div class="flex gap-3 ">
+            <div class="m-3 p-2  bg-white shadow-md"> <i class="pi pi-filter"></i>
+                Bulk Action</div>
+            <div class="m-3 p-2 cursor-pointer  bg-white shadow-md"> <i class="pi pi-filter"></i>
+                Filters</div>
+        </div>
+    </div> -->
+
+
+
+    <div class="flex gap-x-4 mt-2">
+        @if (!showDatepicker)
+        {
+        <div (click)="changeControl()" class=" px-4 py-2  rounded-md border cursor-pointer bg-white shadow-md m-2">
+            <i class="pi pi-calendar mx-3"></i> {{today | ordinalDate}}
+        </div>
+        }@else {
+        <p-datepicker size="small" (onSelect)="selectedDate($event)" [autofocus]="true" [iconDisplay]="'input'"
+            [showIcon]="true" inputId="icondisplay" />
+        }
+
+    </div>
+
+    <div class="col-span-12 md:col-span-12 mt-1">
+        <bt-start></bt-start>
+    </div>
+
+    <div class="flex justify-between mt-6">
+        <div class="text-xl font-bold">Mini Transaction Table</div>
+        <div class="rounded-md border cursor-pointer pt-3 px-4 flex items-center justify-between shadow-md bg-white">
+            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 10H15M2.5 5H17.5M7.5 15H12.5" stroke="#344054" stroke-width="1.67" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span class="ml-2 font-bold">Filters</span>
+        </div>
+
+    </div>
+<div class="mt-4">
+        <p-table [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr class="bg-black">
+                    <th>Order Id</th>
+                    <th>Order Date</th>
+                    <th>Amount</th>
+                    <th>Commission</th>
+
+                </tr>
+            </ng-template>
+            <ng-template #body let-product>
+                <tr>
+
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

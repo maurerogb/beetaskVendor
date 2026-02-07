@@ -1,0 +1,113 @@
+
+
+
+/* Target the left section */
+.left-section {
+  background-color: #f28c38; /* Custom orange shade similar to bg-orange-600 but adjustable */
+  color: #1D1B1C; /* White text */
+  padding: 3rem; /* Equivalent to Tailwind p-12 */
+  display: flex;
+   margin: 7px 10px;
+  flex-direction: column;
+  justify-content: center;
+  height: 98vh; /* Full viewport height */
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+
+
+}
+
+/* Style the logo */
+.left-section img:first-child {
+  width: 8rem; /* w-32 in Tailwind */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Heading and paragraph styling */
+.left-section h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+  margin-bottom: 1rem; /* mb-4 */
+  line-height: 1.25;
+}
+
+.left-section p {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.5;
+}
+
+/* Vendor link */
+.left-section a:first-of-type {
+  color: #ffffff; /* text-white */
+  text-decoration: underline;
+  margin-top: 2rem; /* mt-8 */
+}
+
+/* Illustration image */
+.left-section img:last-child {
+  width: 100%;
+  max-width: 20rem; /* max-w-md */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem; /* mt-12 */
+  display: block;
+}
+
+/* Optional: Add a subtle gradient or overlay for depth */
+.left-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(152.69deg, #FA3305 -20.13%, #C7A160 73.62%, #F6B84F 109.58%);
+  z-index: 0;
+}
+
+
+.left-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .left-section {
+    width: 100%;
+    height: auto;
+    padding: 2rem;
+  }
+
+  .left-section img:last-child {
+    max-width: 15rem;
+    margin-top: 2rem;
+  }
+
+  .left-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .left-section p {
+    font-size: 1rem;
+  }
+}
+.vendors-btn{
+width: 156px;
+height: 40;
+border-radius: 16px;
+opacity: 1;
+background-color: #FEF0D8;
+gap: 4px;
+padding-top: 8px;
+padding-right: 12px;
+padding-bottom: 8px;
+padding-left: 12px;
+}
+.vendors-btn h2{
+font-weight: 700;
+font-style: Bold;
+font-size: 16px;
+color: #992409;
+}

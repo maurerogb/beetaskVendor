@@ -1,0 +1,124 @@
+<div class="h-screen m-4 p-4 card">
+
+    <div>
+        <div class="flex justify-between items-center">
+            <div class="flex flex-col">
+                <span class="text-[#1F0702] text-2xl font-bold">Menu Types </span>
+                <span class="text-lg">Manage the kinds of Menu the app supports.</span>
+            </div>
+            <div>
+                <button class=" rounded-2xl bg-p pt-2 pb-2 pr-4  pl-4" (click)="addMenu()">Add Menu
+                    Types</button>
+            </div>
+        </div>
+
+        <div class="flex justify-between mt-6">
+            <div class="w-2/4">
+                <p-iconfield>
+                    <p-inputicon class="pi pi-search" />
+                    <input class="w-full" type="text" pInputText placeholder="Search" />
+                </p-iconfield>
+            </div>
+            <div class="flex flex-row gap-2">
+                <app-date-filter></app-date-filter>
+                <app-filter></app-filter>
+            </div>
+        </div>
+        <div class="mt-6">
+            <p-table class="table-fixed" [value]="menuTypes()" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template #header>
+                    <tr class="bg-black">
+                        <th class="w-2/6">Menu types</th>
+                        <th class="w-2/6">Description</th>
+                        <th class="w-1.6">IsMain</th>
+                        <th class="w-auto">Status</th>
+                        <th class=" w-1/6">Active</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-item>
+                    <tr>
+
+                        <td>
+                            <div class="flex items-center gap-3">
+                                @if (item.imgLink) {
+                                <img class="rounded-full" width="40" height="40" [src]="item.imgLink" alt="">
+                                }
+                                <span>{{item.typeName}}</span>
+                            </div>
+                        </td>
+                        <td>{{item.discription}}</td>
+                        <td>{{item.isMain}}</td>
+                        <td>
+                            <p-tag [severity]="item.isActive ? 'success' : 'danger'"
+                                [value]="getActiveStatus(item.isActive)" />
+                        </td>
+                        <td class="space-x-2 items-end">
+                            <a class="font-bold text-p-color " (click)="openDetails(item)" href="javascript:void(0)">
+                                <i class="pi pi-pencil"></i>
+                            </a>
+                            <a class="font-bold text-p-color " (click)="openDetails(item)" href="javascript:void(0)">
+                                <i class="pi pi-trash"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<p-dialog [(visible)]="showDialog" [closable]="false" [style]="{width: '500px'}" [modal]="true" class="p-fluid">
+    <ng-template #header>
+
+        <div class="flex flex-row  justify-between w-full  gap-2">
+            <p class="font-bold text-xl">Add Business Type</p>
+            <app-cancel class="cursor-pointer" (click)="closeFormDetails()"></app-cancel>
+        </div>
+
+    </ng-template>
+    <ng-template pTemplate="content">
+
+        <div class="m-4 space-y-4" [formGroup]="btForm!">
+            <div class="flex flex-col gap-2">
+                <label for="">Menu type</label>
+                <input pInputText type="text" formControlName="menuTypeName">
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="">Discription</label>
+                <input pInputText type="text" formControlName="description">
+            </div>
+            <div class="  flex flex-col">
+                <label class="font-medium text-surface-900 dark:text-surface-0  block">
+                    Item Picture
+                </label>
+                <app-file-upload [accept]="'image/*'" [imageUrl]="imageUrl()"  class="w-full" (fileChange)="onMenuUpload($event)">
+                </app-file-upload>
+            </div>
+            <div class="flex flex-row justify-between gap-3">
+                <div class="flex items-end">
+                    <label for="isMain" class="mr-2"> Is Main? </label>
+                    <p-checkbox [binary]="true" formControlName="isMain" inputId="isMain" name="isActive"
+                        value="Cheese" />
+                </div>
+                <div class="flex items-end">
+                    <label for="isActive" class="mr-2"> Is Active? </label>
+                    <p-checkbox [binary]="true" formControlName="isActive" inputId="isActive" name="isActive"
+                        value="Cheese" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" (click)="cancel()" class="p-button-cancel"></button>
+        <button pButton pRipple label="Save" (click)="save()" icon="pi pi-check" class=""></button>
+    </ng-template>
+</p-dialog>

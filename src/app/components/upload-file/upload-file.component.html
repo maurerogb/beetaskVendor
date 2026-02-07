@@ -1,0 +1,43 @@
+<div class="border border-dashed border-[#BBBBBB] rounded-lg p-5 flex justify-center cursor-pointer">
+    <input type="file" #fileUpload class="hidden" (change)="uploadFile($event)" accept=".xls,.xlsx,.csv" />
+
+    <button type="button" (click)="openFilePicker(fileUpload)" class="flex gap-2 items-center text-sm font-medium">
+        @if (catImg) {
+        <img [src]="catImg" class="rounded-full" height="35" width="35" alt="Preview" />
+        } @else {
+        <img src="../../../assets/svg/upload.svg" class="text-gray-600" alt="Upload" />
+        }
+
+        @if (newfile?.name) {
+        <span>{{ newfile?.name }}</span>
+        } @else {
+        <span>
+            Drag file here to upload document or
+            <span class="font-bold text-[#6941C6]">choose file</span>
+        </span>
+        }
+    </button>
+</div>
+
+
+
+<!-- <div class="border border-dashed border-[#BBBBBB] rounded-lg p-5 flex justify-center">
+    <input type="{{ fileType }}" #fileUpload class="hidden" (change)="uploadFile($event)" />
+
+    <button type="button" (click)="fileUpload.click()" class="flex gap-2 items-center text-sm font-medium">
+        @if (catImg) {
+        <img [src]="catImg" class="rounded-full" height="35" width="35" alt="Preview" />
+        } @else {
+        <img src="../../../assets/svg/upload.svg" class="text-gray-600" alt="Upload" />
+        }
+
+        @if (newfile?.name) {
+        <span>{{ newfile?.name }}</span>
+        } @else {
+        <span>
+            Drag file here to upload document or
+            <span class="font-bold text-[#6941C6]">choose file</span>
+        </span>
+        }
+    </button>
+</div> -->

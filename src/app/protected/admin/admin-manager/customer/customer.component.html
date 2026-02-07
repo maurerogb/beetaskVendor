@@ -1,0 +1,301 @@
+<div class="m-4 h-screen">
+    <div class="flex justify-between">
+        <div class="flex flex-col">
+            <span class="text-[#1F0702] text-2xl font-bold">Customer Details </span>
+            <span class="text-lg">Keep track of customer and their security ratings.</span>
+        </div>
+
+    </div>
+
+    <div class="flex justify-between mt-6">
+        <div class="w-2/4">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input class="w-full" type="text" pInputText placeholder="Search" />
+            </p-iconfield>
+        </div>
+        <div class="flex flex-row gap-2">
+            <app-date-filter></app-date-filter>
+            <app-filter></app-filter>
+        </div>
+    </div>
+
+    <div class="mt-6">
+
+        @if (customer() ) {
+        <p-table [rows]="paging()?.pageSize" [paginator]="enablePaginator" [value]="customer()!"
+            [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr class="bg-black">
+                    <th>Customer Name</th>
+                    <th>Email Address</th>
+                    <th>User Name</th>
+                    <th>Location</th>
+                    <th>Total Order</th>
+                    <th>Last Login</th>
+                    <th>Status</th>
+                    <th>Activites</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-customer>
+                <tr>
+                    <td>{{customer.fullName}}</td>
+                    <td>{{customer.email}}</td>
+                    <td>{{customer.userName}}</td>
+                    <td>{{customer.address | trimWords:2}}</td>
+                    <td>{{customer.orderCount}}</td>
+                    <td>{{customer.orderDate}}</td>
+                    <td>{{getStatus(customer.isActive)}}</td>
+
+                    <td> <a class="font-bold text-p-color" (click)="openDetails(customer)"
+                            href="javascript:void(0)">View</a> </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        }
+        @else {
+        <div class="flex  mt-8 border shadow rounded-lg bg-[#f3e7e4] justify-center items-center">
+            <div class="m-4 text-lg font-semibold ">
+                No Customer Available
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<p-dialog #content [closable]="false" [visible]="showModal()" [modal]="true" [responsive]="true    "
+    [style]="{width: '750px', minWidth: '350px' }">
+    <ng-template #header>
+        <div class="flex flex-col w-full gap-4">
+            <div class="flex justify-between w-full">
+                <div><span class="text-2xl font-bold">Customer Details</span></div>
+                <app-cancel class="cursor-pointer" (click)="closeDetails()"></app-cancel>
+            </div>
+
+            <div class="flex justify-between w-full items-center ">
+                @let customer = selectedCustomer();
+                <div class="flex flex-row space-x-3">
+                    <div class="rounded-full">
+                        <app-user-icon></app-user-icon>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex gap-2">
+                            <span class=" text-2xl">{{customer?.fullName}}</span>
+                            <p-tag [rounded]="true" [severity]="getSeverity(3)"
+                                [value]="getStatus(customer?.isActive!)"></p-tag>
+                        </div>
+                        <span class="font-bold text-xl text-[#5B5858]">Customer</span>
+                        <span class="text-xl text-[#5B5858]">Joined Since: {{customer?.createdOn |date}}</span>
+                    </div>
+                </div>
+                <i class="pi pi-ellipsis-v cursor-pointer" (click)="op.toggle($event)"></i>
+            </div>
+
+        </div>
+        <p-popover #op>
+            <div class="flex flex-col gap-4 w-[25rem]">
+                <div>
+
+                    <ul class="list-none p-0 m-0 flex flex-col gap-4">
+
+                        <li (click)="flagVendor(vendor)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <bt-flag-icon> </bt-flag-icon>
+                                <span>Flag</span>
+                            </div>
+                        </li>
+                        <li (click)="suspendVendor(vendor)" class="flex items-center cursor-pointer gap-2">
+                            <div class="flex items-center font-semibold gap-2 text-muted-color ml-auto text-sm">
+                                <bt-trash-icon> </bt-trash-icon>
+                                <span>Suspend</span>
+                            </div>
+                        </li>
+                        <li (click)="deleteVendor(vendor)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <bt-trash-icon> </bt-trash-icon>
+                                <span>Delete Account</span>
+                            </div>
+                        </li>
+
+                        <li (click)="deleteVendor(vendor)" class="flex items-center font-semibold cursor-pointer gap-2">
+                            <div class="flex items-center gap-2 text-muted-color ml-auto text-sm">
+                                <app-lock-icon> </app-lock-icon>
+                                <span>Reset Password</span>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </p-popover>
+    </ng-template>
+    <ng-template pTemplate="content" class="bg-p">
+        <div>
+            <p-tabs value="0">
+                <p-tablist>
+                    <p-tab value="0">Profile Information</p-tab>
+                    <p-tab value="1">Order Summery</p-tab>
+                    <p-tab value="2">Complaint</p-tab>
+                </p-tablist>
+                <p-tabpanels>
+                    <p-tabpanel value="0">
+                        <p-scrollpanel [style]="{ width: '100%', height: '325px' }">
+                            <div class="p-6">
+                                <div class="m-0">
+                                    @let cust = selectedCustomer();
+                                    <span class="ml-0 text-lg font-bold">Contact Information</span>
+                                    <div class="grid grid-cols-12 mt-2  gap-3">
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Customer ID</span>
+                                            <span class="text-lg font-semibold">{{cust!.uuId.substring(cust!.uuId.length
+                                                - 10)}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Phone Number</span>
+                                            <span class="text-lg font-semibold">{{cust!.phoneNumber}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Email Address</span>
+                                            <span class="text-lg font-semibold">{{cust!.email}}</span>
+                                        </div>
+                                    </div>
+                                    <div class=" flex flex-col">
+                                        <span class="text-lg">Address</span>
+                                        <span class="text-lg font-semibold">{{cust!.address}}</span>
+                                    </div>
+                                </div>
+                                <!-- <div class="mt-4">
+                                    @let profile = profileDetails();
+                                    <span class="ml-0 text-lg font-bold">Owner’s Information</span>
+                                    <div class="grid grid-cols-12 mt-2 ">
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Owners Name</span>
+                                            <span class="text-lg font-semibold">{{profile!.fullName}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Owners Phone Number</span>
+                                            <span class="text-lg font-semibold">{{profile?.phoneNumber}}</span>
+                                        </div>
+                                        <div class="col-span-4 flex flex-col">
+                                            <span class="text-lg">Email Address</span>
+                                            <span class="text-lg font-semibold">{{profile?.email}}</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <!-- <div class="bg-white border rounded-lg p-6">
+                                <span class="text-xl ml-0 mt-6  font-bold">Business Verification</span>
+                                <div class="mt-2">
+                                    <span class="text-lg">Business Documents</span>
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-6 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class="text-lg font-semibold">CAC Certificate</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-lg font-semibold"> <a
+                                                    href="javascript:void(0)">view</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <span class="text-lg">Food Handleing Documents</span>
+                                    <div
+                                        class="flex justify-between items-center border border-[#BDBCBC] p-6 rounded-2xl ">
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <app-note></app-note>
+                                            <span class="text-lg font-semibold">Food Handleing Documents</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-lg font-semibold"> <a href="javascript:void(0)">view</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div> -->
+                        </p-scrollpanel>
+                    </p-tabpanel>
+                    <p-tabpanel value="1">
+                        <div class="mt-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl ml-0   font-bold">Complaint and Dispute List</span>
+                                <div class="flex flex-row items-center">
+                                    <div class="flex flex-row gap-2">
+                                        <app-sort></app-sort>
+                                        <span>Sort</span>
+                                    </div>
+                                    <p-divider layout="vertical"></p-divider>
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <app-filter-svg></app-filter-svg>
+                                        <span>Filters</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <p-table [tableStyle]="{ 'min-width': '50rem', 'margin-top': '1rem' }" [paginator]="true"
+                                [rows]="10">
+                                <ng-template #header>
+                                    <tr class="bg-black items-center">
+                                        <th>Order ID</th>
+                                        <!-- <th>Item Name</th> -->
+                                        <th>Date</th>
+                                        <th>Pickup</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Complaint</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template #body let-product>
+
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </p-tabpanel>
+                    <p-tabpanel value="2">
+                        <div class="mt-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl ml-0   font-bold">Complaint and Dispute List</span>
+                                <div class="flex flex-row items-center">
+                                    <div class="flex flex-row gap-2">
+                                        <app-sort></app-sort>
+                                        <span>Sort</span>
+                                    </div>
+                                    <p-divider layout="vertical"></p-divider>
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <app-filter-svg></app-filter-svg>
+                                        <span>Filters</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <p-table [tableStyle]="{ 'min-width': '50rem', 'margin-top': '1rem' }" [paginator]="true"
+                                [rows]="10">
+                                <ng-template #header>
+                                    <tr class="bg-black items-center">
+                                        <th>Order ID</th>
+                                        <!-- <th>Item Name</th> -->
+                                        <th>Pickup</th>
+                                        <th>Complaint</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template #body let-product>
+
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+        </div>
+    </ng-template>
+
+</p-dialog>
